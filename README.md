@@ -18,4 +18,4 @@ This repo contains the codebase for the ??? project
 
 ### License
 
-This project is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License) (see the [LICENSE](./LICENSE) file)
+This project is distributed under the [MIT license](https://en.wikipedia.org/wiki/MIT_License) (see the [LICENSE](./LICENSE.md) file)
