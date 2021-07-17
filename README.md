@@ -1,6 +1,6 @@
 # Data-Viz
 
-This repo contains the codebase for the ??? project
+Data-Viz is a project to explore various data visualization techniques in Unity
 
 ### Requisites
 
