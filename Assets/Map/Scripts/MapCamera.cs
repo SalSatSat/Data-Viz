@@ -23,8 +23,8 @@ public class MapCamera : MonoBehaviour
 	[Header("Camera")]
 	[SerializeField] private Transform pivot = default;
 	public Transform Pivot { get { return pivot; } }
-	[Range(1.0f, 10.0f)]
-	[SerializeField] private float distanceToMap = 10f;
+	[Range(50.0f, 200.0f)]
+	[SerializeField] private float distanceToMap = 100f;
 
 	[Header("Rotation Constraints")]
 	[SerializeField] private float MinPitchAngle = 30.0f;

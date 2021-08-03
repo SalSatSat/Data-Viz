@@ -122,7 +122,7 @@ MonoBehaviour:
   inputHandler: {fileID: 0}
   canvas: {fileID: 0}
   pivot: {fileID: 6699738974497287300}
-  distanceToMap: 1.5
+  distanceToMap: 100
   MinPitchAngle: 30
   MaxPitchAngle: 90
   MinYawAngle: -135
