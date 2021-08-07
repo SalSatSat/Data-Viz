@@ -19,6 +19,8 @@ public class Consumption
 	public string units;
 	public Color color;
 	public List<float> values = new List<float>();
+	public float maxVal;
+	public float minVal;
 }
 
 public class Neighbourhood : MonoBehaviour
@@ -26,11 +28,14 @@ public class Neighbourhood : MonoBehaviour
 	//[Header("UI References")]
 	//[Header("Prefabs")]
 
-	[SerializeField] private List<Consumption> consumptions = new List<Consumption>();
 	[SerializeField] private Material buildingMat = default;
 	[SerializeField] private int consumptionIndex = 0;
 
 	private MeshRenderer[] buildings = null;
+
+	private readonly List<Consumption> consumptions = new List<Consumption>();
+	private readonly Color DefaultColor = Color.white;
+	private const float invMaxColorVal = 1.0f / 255.0f;
 
 	//
 	// Unity Methods
@@ -38,6 +43,8 @@ public class Neighbourhood : MonoBehaviour
 
 	private void Awake()
 	{
+		Debug.Assert(buildingMat != null, "Neighbourhood: Missing buildingMat");
+
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
 		InitConsumptions();
 	}
@@ -48,10 +55,10 @@ public class Neighbourhood : MonoBehaviour
 		var consumption = consumptions[consumptionIndex];
 
 		// Normalized buffer
-		var buffer = NormalizeBuffer(consumption.values.ToArray(), GetMaxValue(consumption.values.ToArray()));
+		var buffer = NormalizeBuffer(consumption.values.ToArray());
 		for (int j = 0; j < length; ++j)
 		{
-			buildings[j].material.color = consumption.color * buffer[j];
+			buildings[j].material.color = Color.Lerp(DefaultColor, consumption.color, buffer[j]);
 		}
 	}
 
@@ -92,7 +99,9 @@ public class Neighbourhood : MonoBehaviour
 				{
 					name = splitConsumptionNames[i].Substring(0, index - 1),
 					units = splitConsumptionNames[i].Substring(index + 1, splitConsumptionNames[i].Length - index - 2),
-					color = new Color(float.Parse(splitColours[i].Split('-')[0]), float.Parse(splitColours[i].Split('-')[1]), float.Parse(splitColours[i].Split('-')[2]))
+					color = new Color(int.Parse(splitColours[i].Split('-')[0]) * invMaxColorVal,
+									  int.Parse(splitColours[i].Split('-')[1]) * invMaxColorVal,
+									  int.Parse(splitColours[i].Split('-')[2]) * invMaxColorVal)
 				};
 				consumptions.Add(consumption);
 			}
@@ -110,6 +119,25 @@ public class Neighbourhood : MonoBehaviour
 				}
 			}
 		}
+
+		// Initialize min and max value for each consumption
+		foreach (var consumption in consumptions)
+		{
+			consumption.minVal = GetMinValue(consumption.values.ToArray());
+			consumption.maxVal = GetMaxValue(consumption.values.ToArray());
+		}
+	}
+
+	private float GetMinValue(float[] array)
+	{
+		float minVal = array[0];
+		foreach (var value in array)
+		{
+			if (value < minVal)
+				minVal = value;
+		}
+
+		return minVal;
 	}
 
 	private float GetMaxValue(float[] array)
@@ -124,14 +152,21 @@ public class Neighbourhood : MonoBehaviour
 		return maxVal;
 	}
 
-	private float[] NormalizeBuffer(float[] array, float maxVal)
+	private float[] NormalizeBuffer(float[] array)
 	{
 		int length = array.Length;
 		var buffer = new float[length];
 
-		for (int i = 0; i < length; ++i)
+		var minVal = GetMinValue(array);
+		var maxVal = GetMaxValue(array);
+		var diffVal = maxVal - minVal;
+		if (diffVal > 0.0f)
 		{
-			buffer[i] = array[i] / maxVal;
+			var invDiffVal = 1.0f / diffVal;
+			for (int i = 0; i < length; ++i)
+			{
+				buffer[i] = (array[i] - minVal) * invDiffVal;
+			}
 		}
 
 		return buffer;
