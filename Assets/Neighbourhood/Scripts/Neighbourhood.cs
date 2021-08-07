@@ -34,7 +34,8 @@ public class Neighbourhood : MonoBehaviour
 	private MeshRenderer[] buildings = null;
 
 	private readonly List<Consumption> consumptions = new List<Consumption>();
-	private readonly Color DefaultColor = Color.white;
+	public List<Consumption> Consumptions { get { return consumptions; } }
+	public readonly Color DefaultColor = Color.white;
 	private const float invMaxColorVal = 1.0f / 255.0f;
 
 	//
@@ -51,15 +52,7 @@ public class Neighbourhood : MonoBehaviour
 
 	private void Start()
 	{
-		int length = buildings.Length;
-		var consumption = consumptions[consumptionIndex];
-
-		// Normalized buffer
-		var buffer = NormalizeBuffer(consumption.values.ToArray());
-		for (int j = 0; j < length; ++j)
-		{
-			buildings[j].material.color = Color.Lerp(DefaultColor, consumption.color, buffer[j]);
-		}
+		UpdateNeighbourhoodConsumption(0);
 	}
 
 	//
@@ -72,7 +65,17 @@ public class Neighbourhood : MonoBehaviour
 	// Public Methods
 	//
 
-
+	public void UpdateNeighbourhoodConsumption(int option)
+	{
+		int length = buildings.Length;
+		var consumption = consumptions[option];
+		// Normalized buffer
+		var buffer = NormalizeBuffer(consumption.values.ToArray());
+		for (int j = 0; j < length; ++j)
+		{
+			buildings[j].material.color = Color.Lerp(DefaultColor, consumption.color, buffer[j]);
+		}
+	}
 
 	//
 	// Private Methods
