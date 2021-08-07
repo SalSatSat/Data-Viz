@@ -186,10 +186,26 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 2537295583477644971, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3036974628726788000, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
       propertyPath: mapCamera
       value: 
       objectReference: {fileID: 1066592165}
+    - target: {fileID: 4776465209540863265, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5688273048752896866, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5688273048752896866, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6385786408357683269, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
       propertyPath: mapCamera
       value: 
@@ -665,6 +681,14 @@ PrefabInstance:
     - target: {fileID: 8841471329867954402, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8877942701037305812, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
+      propertyPath: _imagery._layerProperty.sourceType
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8877942701037305812, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
+      propertyPath: _imagery._layerProperty.sourceOptions.layerSource.Id
+      value: mapbox://styles/salsatsat/cks16na7h020018qq9dl92zeb
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
