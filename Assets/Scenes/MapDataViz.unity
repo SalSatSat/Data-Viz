@@ -186,18 +186,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
-    - target: {fileID: 2537295583477644971, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3036974628726788000, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
       propertyPath: mapCamera
       value: 
       objectReference: {fileID: 1066592165}
-    - target: {fileID: 4776465209540863265, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5688273048752896866, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -205,6 +197,18 @@ PrefabInstance:
     - target: {fileID: 5688273048752896866, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5688273048752896866, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5688273048752896866, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 336
+      objectReference: {fileID: 0}
+    - target: {fileID: 5761229184597725470, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 6385786408357683269, guid: 26cdfa495b00b02468bec547985bb7e6, type: 3}
       propertyPath: mapCamera
