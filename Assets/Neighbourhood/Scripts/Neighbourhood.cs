@@ -18,7 +18,7 @@ public class Consumption
 	public string name;
 	public string units;
 	public Color color;
-	public List<float> values = new List<float>();
+	public float[] values = null;
 	public float maxVal;
 	public float minVal;
 }
@@ -32,11 +32,13 @@ public class Neighbourhood : MonoBehaviour
 	[SerializeField] private int consumptionIndex = 0;
 
 	private MeshRenderer[] buildings = null;
+	private Consumption selectedConsumption;
 
 	private readonly List<Consumption> consumptions = new List<Consumption>();
 	public List<Consumption> Consumptions { get { return consumptions; } }
 	public readonly Color DefaultColor = Color.white;
-	private const float invMaxColorVal = 1.0f / 255.0f;
+	public readonly Color OutOfRangeColor = Color.grey;
+	private const float InvMaxColorVal = 1.0f / 255.0f;
 
 	//
 	// Unity Methods
@@ -53,6 +55,7 @@ public class Neighbourhood : MonoBehaviour
 	private void Start()
 	{
 		UpdateNeighbourhoodConsumption(0);
+		UpdateSelectedNeighbourhoodColors(0.0f, 1.0f);
 	}
 
 	//
@@ -68,12 +71,26 @@ public class Neighbourhood : MonoBehaviour
 	public void UpdateNeighbourhoodConsumption(int option)
 	{
 		int length = buildings.Length;
-		var consumption = consumptions[option];
+		selectedConsumption = consumptions[option];
 		// Normalized buffer
-		var buffer = NormalizeBuffer(consumption.values.ToArray());
+		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
 		for (int j = 0; j < length; ++j)
 		{
-			buildings[j].material.color = Color.Lerp(DefaultColor, consumption.color, buffer[j]);
+			buildings[j].material.color = Color.Lerp(DefaultColor, selectedConsumption.color, buffer[j]);
+		}
+	}
+
+	public void UpdateSelectedNeighbourhoodColors(float normalizedMin, float normalizedMax)
+	{
+		int length = buildings.Length;
+		// Normalized buffer
+		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
+		for (int j = 0; j < length; ++j)
+		{
+			if ((buffer[j] < normalizedMin) || (buffer[j] > normalizedMax))
+				buildings[j].material.color = OutOfRangeColor;
+			else
+				buildings[j].material.color = Color.Lerp(DefaultColor, selectedConsumption.color, buffer[j]);
 		}
 	}
 
@@ -85,41 +102,38 @@ public class Neighbourhood : MonoBehaviour
 	{
 		using (StreamReader sr = new StreamReader($"Data{Path.DirectorySeparatorChar}Consumption.csv"))
 		{
-			// Read first row (consumptions)
-			var consumptionNames = sr.ReadLine();
-			var splitConsumptionNames = consumptionNames.Split(',');
+			// Read and skip first row (headers)
+			sr.ReadLine();
 
-			// Read second row (colours)
-			var colours = sr.ReadLine();
-			var splitColours = colours.Split(',');
-
-			var namesLength = splitConsumptionNames.Length;
-			// Create consumption and initialize properties
-			for (int i = 0; i < namesLength; ++i)
-			{
-				int index = splitConsumptionNames[i].IndexOf('(');
-				var consumption = new Consumption
-				{
-					name = splitConsumptionNames[i].Substring(0, index - 1),
-					units = splitConsumptionNames[i].Substring(index + 1, splitConsumptionNames[i].Length - index - 2),
-					color = new Color(int.Parse(splitColours[i].Split('-')[0]) * invMaxColorVal,
-									  int.Parse(splitColours[i].Split('-')[1]) * invMaxColorVal,
-									  int.Parse(splitColours[i].Split('-')[2]) * invMaxColorVal)
-				};
-				consumptions.Add(consumption);
-			}
-
-			// Initialize values buffer
+			// Read the rest of lines and initialize consumption properties
 			while (!sr.EndOfStream)
 			{
-				var values = sr.ReadLine();
-				var splitValues = values.Split(',');
-				var valLength = splitValues.Length;
+				var line = sr.ReadLine();
+				var splitLine = line.Split(',');
+				var length = splitLine.Length;
 
-				for (int j = 0; j < valLength; ++j)
+				var consumptionName = splitLine[0];
+				int index = consumptionName.IndexOf('(');
+
+				var color = splitLine[1];
+				var colorComponents = color.Split('-');
+				var r = int.Parse(colorComponents[0]) * InvMaxColorVal;
+				var g = int.Parse(colorComponents[1]) * InvMaxColorVal;
+				var b = int.Parse(colorComponents[2]) * InvMaxColorVal;
+
+				var consumption = new Consumption
 				{
-					consumptions[j].values.Add(float.Parse(splitValues[j]));
-				}
+					name = consumptionName.Substring(0, index - 1),
+					units = consumptionName.Substring(index + 1, consumptionName.Length - index - 2),
+					color = new Color(r, g, b),
+				};
+
+				int valuesLength = length - 2;
+				string[] valuesStr = new string[valuesLength];
+				Array.Copy(splitLine, 2, valuesStr, 0, valuesLength);
+				consumption.values = Array.ConvertAll(valuesStr, new Converter<string, float>((str) => { return float.Parse(str); }));
+				
+				consumptions.Add(consumption);
 			}
 		}
 
