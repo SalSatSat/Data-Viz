@@ -10,8 +10,6 @@ Shader "Custom/RangeGradient"
 {
 	Properties
 	{
-		//PerRenderedData
-		//[HideInInspector] _MainTex("Sprite Texture", 2D) = "white" {}
 		[HideInInspector] _Color1 ("Left Color", Color) = (0, 0, 0, 0)
 		[HideInInspector] _Color2 ("Right Color", Color) = (1, 1, 1, 1)
 		[HideInInspector] _Color3 ("Out of Range Color", Color) = (0.5, 0.5, 0.5, 0.5)
