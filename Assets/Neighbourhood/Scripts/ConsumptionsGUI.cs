@@ -9,15 +9,18 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System;
 
 public class ConsumptionsGUI : MonoBehaviour
 {
 	[Header("UI References")]
 	[SerializeField] private TMP_Dropdown consumptionDropdown = default;
-	[SerializeField] private FilterRange filterScale = default;
+	[SerializeField] private FilterRange filterRange = default;
 
 	[Header("Reference")]
 	[SerializeField] private Neighbourhood neighbourhood = default;
+
+	private Consumption selectedConsumption = null;
 
 	//[Header("Prefabs")]
 
@@ -28,7 +31,7 @@ public class ConsumptionsGUI : MonoBehaviour
 	private void Awake()
 	{
 		Debug.Assert(consumptionDropdown != null, "ConsumptionsGUI: Missing consumptionDropdown");
-		Debug.Assert(filterScale != null, "ConsumptionsGUI: Missing filterScale");
+		Debug.Assert(filterRange != null, "ConsumptionsGUI: Missing filterRange");
 		Debug.Assert(neighbourhood != null, "ConsumptionsGUI: Missing neighbourhood");
 	}
 
@@ -37,8 +40,13 @@ public class ConsumptionsGUI : MonoBehaviour
 		InitDropdown();
 		UpdateFilterScale(0);
 
+		// Initialize color in range shader
+		filterRange.range.material.SetColor("_Color3", neighbourhood.OutOfRangeColor);
+
 		// Initilaize listeners
 		consumptionDropdown.onValueChanged.AddListener(OnOptionChanged);
+		filterRange.minSlider.onValueChanged.AddListener(OnMinValueChanged);
+		filterRange.maxSlider.onValueChanged.AddListener(OnMaxValueChanged);
 	}
 
 	//
@@ -51,11 +59,47 @@ public class ConsumptionsGUI : MonoBehaviour
 		UpdateFilterScale(option);
 	}
 
+	private void OnMinValueChanged(float normalizedMin)
+	{
+		float normalizedMax = filterRange.maxSlider.value;
+
+		// Ensure min slider does not go past max slider
+		if (normalizedMin > normalizedMax)
+			filterRange.minSlider.value = normalizedMax;
+
+		// Update min value label
+		float minValue = (normalizedMin * (selectedConsumption.maxVal - selectedConsumption.minVal) + selectedConsumption.minVal);
+		filterRange.minValue.text = minValue.ToString("0.##");
+
+		// Update min property in RangeGradient shader
+		if (filterRange.range.material != null)
+			filterRange.range.material.SetFloat("_Min", normalizedMin);
+
+		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
+	}
+
+	private void OnMaxValueChanged(float normalizedMax)
+	{
+		float normalizedMin = filterRange.minSlider.value;
+
+		// Ensure max slider does not go past min slider
+		if (normalizedMax < normalizedMin)
+			filterRange.maxSlider.value = normalizedMin;
+
+		// Update max value label
+		float maxValue = (normalizedMax * (selectedConsumption.maxVal - selectedConsumption.minVal) + selectedConsumption.minVal);
+		filterRange.maxValue.text = maxValue.ToString("0.##");
+
+		// Update max property in RangeGradient shader
+		if (filterRange.range.material != null)
+			filterRange.range.material.SetFloat("_Max", normalizedMax);
+
+		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
+	}
+
 	//
 	// Public Methods
 	//
-
-
 
 	//
 	// Private Methods
@@ -76,19 +120,22 @@ public class ConsumptionsGUI : MonoBehaviour
 
 	private void UpdateFilterScale(int option)
 	{
-		var consumption = neighbourhood.Consumptions[option];
+		selectedConsumption = neighbourhood.Consumptions[option];
+
+		// Reset slider values
+		filterRange.minSlider.value = 0.0f;
+		filterRange.maxSlider.value = 1.0f;
 
 		// Update min max value labels
-		filterScale.minValue.text = consumption.minVal.ToString();
-		filterScale.maxValue.text = consumption.maxVal.ToString();
+		filterRange.minValue.text = selectedConsumption.minVal.ToString("0.##");
+		filterRange.maxValue.text = selectedConsumption.maxVal.ToString("0.##");
 
-		if (!filterScale.range.material)
-			Debug.LogError("ConsumptionsGUI: Missing material for Range");
-
-		// Update range gradient colour
+		// Update range gradient colour and min, max values
 		var defaultColor = neighbourhood.DefaultColor;
-		var tint = consumption.color;
-		filterScale.range.material?.SetColor("_Color1", Color.Lerp(defaultColor, tint, 0));
-		filterScale.range.material?.SetColor("_Color2", Color.Lerp(defaultColor, tint, 1));
+		var tint = selectedConsumption.color;
+		filterRange.range.material.SetColor("_Color1", Color.Lerp(defaultColor, tint, filterRange.minSlider.value));
+		filterRange.range.material.SetColor("_Color2", Color.Lerp(defaultColor, tint, filterRange.maxSlider.value));
+		filterRange.range.material.SetFloat("_Min", filterRange.minSlider.value);
+		filterRange.range.material.SetFloat("_Max", filterRange.maxSlider.value);
 	}
 }
