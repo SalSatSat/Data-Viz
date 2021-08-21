@@ -14,8 +14,8 @@ public class FilterRange : MonoBehaviour
 {
 	[Header("UI References")]
 	public Image range;
-	public SliderEx minSlider;
-	public SliderEx maxSlider;
+	public Slider minSlider;
+	public Slider maxSlider;
 	public TMP_Text minValue;
 	public TMP_Text maxValue;
 
@@ -28,6 +28,7 @@ public class FilterRange : MonoBehaviour
 	private void Awake()
 	{
 		Debug.Assert(range != null, "FilterScale: Missing range");
+		Debug.Assert(range.material != null, "FilterScale: Missing material for range");
 		Debug.Assert(minSlider != null, "FilterScale: Missing minSlider");
 		Debug.Assert(maxSlider != null, "FilterScale: Missing maxSlider");
 		Debug.Assert(minValue != null, "FilterScale: Missing maxValue");
