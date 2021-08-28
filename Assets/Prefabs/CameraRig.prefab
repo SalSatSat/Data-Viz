@@ -30,7 +30,7 @@ Transform:
   - {fileID: 6699738974526175993}
   m_Father: {fileID: 6699738975265932626}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &6699738974526175994
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,7 +73,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BackGroundColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -86,9 +86,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
-  far clip plane: 100
-  field of view: 40
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -120,15 +120,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapController: {fileID: 0}
   inputHandler: {fileID: 0}
-  canvas: {fileID: 0}
+  map: {fileID: 0}
   pivot: {fileID: 6699738974497287300}
-  distanceToMap: 100
-  MinPitchAngle: 30
-  MaxPitchAngle: 90
-  MinYawAngle: -135
-  MaxYawAngle: 135
-  HorizontalOrbitScale: 0.2
-  VerticalOrbitScale: 0.3
+  minDistanceToMap: 50
+  maxDistanceToMap: 250
+  currDistanceToMap: 100
+  minPitchAngle: 30
+  maxPitchAngle: 90
+  minYawAngle: -135
+  maxYawAngle: 135
+  horizontalOrbitScale: 0.5
+  verticalOrbitScale: 0.5
+  zoomScale: 15
+  panScale: 0.75
 --- !u!1 &6699738975265932629
 GameObject:
   m_ObjectHideFlags: 0
