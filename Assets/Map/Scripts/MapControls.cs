@@ -12,11 +12,17 @@ using UnityEngine.UI;
 public class MapControls : MonoBehaviour
 {
 	[Header("UI References")]
+	[SerializeField] private Button zoomInButton = default;
+	[SerializeField] private Button zoomOutButton = default;
 	[SerializeField] private Button compassButton = default;
 
 	//[Header("Prefabs")]
 	[Header("References")]
 	[SerializeField] private MapCamera mapCamera = default;
+
+	[Header("Scales")]
+	[Range(0.1f, 1.0f)]
+	[SerializeField] private float zoomScale = 0.5f;
 
 	//
 	// Unity Methods
@@ -24,6 +30,8 @@ public class MapControls : MonoBehaviour
 
 	private void Awake()
 	{
+		Debug.Assert(zoomInButton != null, "MapControls: Missing zoomInButton");
+		Debug.Assert(zoomOutButton != null, "MapControls: Missing zoomOutButton");
 		Debug.Assert(compassButton != null, "MapControls: Missing compassButton");
 		Debug.Assert(mapCamera != null, "MapControls: Missing mapCamera");
 	}
@@ -32,7 +40,11 @@ public class MapControls : MonoBehaviour
 	{
 		mapCamera.OnBoundsChange += OnBoundsChange;
 
+		// Initialize listeners
+		zoomInButton.onClick.AddListener(OnZoomInButtonClicked);
+		zoomOutButton.onClick.AddListener(OnZoomOutButtonClicked);
 		compassButton.onClick.AddListener(OnCompassButtonClicked);
+
 		compassButton.transform.parent.gameObject.SetActive(false);
 	}
 
@@ -48,9 +60,20 @@ public class MapControls : MonoBehaviour
 		compassButton.transform.parent.gameObject.SetActive(cameraAngleY != 0.0f);
 	}
 
+	private void OnZoomInButtonClicked()
+	{
+		mapCamera.Zoom(zoomScale);
+	}
+
+	private void OnZoomOutButtonClicked()
+	{
+		mapCamera.Zoom(-zoomScale);
+	}
+
 	private void OnCompassButtonClicked()
 	{
 		mapCamera.ResetRotation();
+		//mapCamera.ResetCameraOffset();
 		OnBoundsChange();
 	}
 
