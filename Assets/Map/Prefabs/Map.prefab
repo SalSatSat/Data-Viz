@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8841471329867954402}
   - component: {fileID: 8877942701037305812}
-  - component: {fileID: 8837764225367181171}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -56,10 +55,10 @@ MonoBehaviour:
           visibleBuffer: 0
           disposeBuffer: 0
         rangeAroundCenterOptions:
-          west: 1
-          north: 1
-          east: 1
-          south: 1
+          west: 10
+          north: 10
+          east: 10
+          south: 10
         rangeAroundTransformOptions:
           targetTransform: {fileID: 0}
           visibleBuffer: 0
@@ -140,22 +139,3 @@ MonoBehaviour:
   _tileProvider: {fileID: 0}
   _previewOptions:
     isPreviewEnabled: 0
---- !u!114 &8837764225367181171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837764225367181172}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44bcada76ee59fd4c8ae53fb95bdf343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startWithCenteredWorld: 1
-  longitude: 0
-  latitude: 0
-  mapScale: 1
-  minZoomLevel: 0
-  maxZoomLevel: 20
-  zoom: 1.5
