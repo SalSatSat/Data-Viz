@@ -381,6 +381,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4911cba746ce04891a7dafb6940ff7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1966819177 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8841471329867954402, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
+  m_PrefabInstance: {fileID: 8836761828204699639}
+  m_PrefabAsset: {fileID: 0}
 --- !u!23 &760477268016469943
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -520,49 +525,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6613791360712862874, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: canvas
+      propertyPath: mapController
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1153707314}
     - target: {fileID: 6613791360712862874, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
       propertyPath: inputHandler
       value: 
       objectReference: {fileID: 1277226115}
     - target: {fileID: 6613791360712862874, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: mapController
+      propertyPath: map
       value: 
-      objectReference: {fileID: 1153707314}
-    - target: {fileID: 6699738974497287300, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738974526175992, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.19607843
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738974526175992, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.19607843
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738974526175992, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.19607843
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738974526175992, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: far clip plane
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738974526175992, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: field of view
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738974526175992, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: near clip plane
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1966819177}
     - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -576,10 +549,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -590,6 +559,14 @@ PrefabInstance:
     - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6699738975265932626, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -688,11 +665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8877942701037305812, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
       propertyPath: _imagery._layerProperty.sourceType
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8877942701037305812, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
-      propertyPath: _imagery._layerProperty.sourceOptions.layerSource.Id
-      value: mapbox://styles/salsatsat/cks16na7h020018qq9dl92zeb
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6407bb39b5a717e49b28c0f35bce90d3, type: 3}
