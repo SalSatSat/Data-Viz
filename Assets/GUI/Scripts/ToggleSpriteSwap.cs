@@ -13,8 +13,8 @@ using UnityEngine.UI;
 public class ToggleSpriteSwap : MonoBehaviour
 {
 	[Header("Sprites")]
-	[SerializeField] private Sprite imageOn;
-	[SerializeField] private Sprite imageOff;
+	[SerializeField] private Sprite imageOn = default;
+	[SerializeField] private Sprite imageOff = default;
 
 	private Image image;
 

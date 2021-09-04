@@ -29,7 +29,6 @@ public class Neighbourhood : MonoBehaviour
 	//[Header("Prefabs")]
 
 	[SerializeField] private Material buildingMat = default;
-	[SerializeField] private int consumptionIndex = 0;
 
 	private MeshRenderer[] buildings = null;
 	private Consumption selectedConsumption;
