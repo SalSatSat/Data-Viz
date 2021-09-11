@@ -116,6 +116,7 @@ public class ConsumptionsGUI : MonoBehaviour
 		}
 
 		consumptionDropdown.AddOptions(consumptionNames);
+		OnOptionChanged(0);
 	}
 
 	private void UpdateFilterScale(int option)
