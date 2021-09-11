@@ -6,21 +6,15 @@
 //
 // Author:  Muhammad Salihin Bin Zaol-kefli  (salsatsat@gmail.com)
 
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Footer : MonoBehaviour
 {
-    [Header("Mapbox")]
-    [SerializeField] private Button mapboxButton = default;
+	[Header("UI References")]
+	[SerializeField] private Button mapboxButton = default;
     [SerializeField] private Transform background = default;
     [SerializeField] private Transform mapboxPopup = default;
-
-	[Header("Help")]
-    [SerializeField] private Button helpButton = default;
-    [SerializeField] private Transform helpPopup = default;
-	[SerializeField] private Button helpPopupCloseButton = default;
 
 	//[Header("Prefabs")]
 
@@ -33,18 +27,11 @@ public class Footer : MonoBehaviour
 		Debug.Assert(mapboxButton != null, "Footer: Missing mapboxButton");
 		Debug.Assert(background != null, "Footer: Missing background");
 		Debug.Assert(mapboxPopup != null, "Footer: Missing mapboxPopup");
-		
-		Debug.Assert(helpButton != null, "Footer: Missing helpButton");
-		Debug.Assert(helpPopup != null, "Footer: Missing helpPopup");
-		Debug.Assert(helpPopupCloseButton != null, "Footer: Missing helpPopup");
-
     }
 
     private void Start()
     {
         mapboxButton.onClick.AddListener(OnMapboxButtonClicked);
-        helpButton.onClick.AddListener(OnHelpButtonClicked);
-		helpPopupCloseButton.onClick.AddListener(OnCloseButtonClicked);
 	}
 
 	//
@@ -55,16 +42,6 @@ public class Footer : MonoBehaviour
 	{
 		background.gameObject.SetActive(true);
 		mapboxPopup.gameObject.SetActive(true);
-	}
-
-	private void OnHelpButtonClicked()
-	{
-		helpPopup.gameObject.SetActive(true);
-	}
-
-	private void OnCloseButtonClicked()
-	{
-		helpPopup.gameObject.SetActive(false);
 	}
 
 	//
