@@ -28,8 +28,6 @@ public class Neighbourhood : MonoBehaviour
 	//[Header("UI References")]
 	//[Header("Prefabs")]
 
-	[SerializeField] private Material buildingMat = default;
-
 	private MeshRenderer[] buildings = null;
 	private Consumption selectedConsumption;
 
@@ -45,8 +43,6 @@ public class Neighbourhood : MonoBehaviour
 
 	private void Awake()
 	{
-		Debug.Assert(buildingMat != null, "Neighbourhood: Missing buildingMat");
-
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
 		InitConsumptions();
 	}
