@@ -9,7 +9,6 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using System;
 
 public class ConsumptionsGUI : MonoBehaviour
 {
@@ -49,6 +48,16 @@ public class ConsumptionsGUI : MonoBehaviour
 		filterRange.maxSlider.onValueChanged.AddListener(OnMaxValueChanged);
 	}
 
+	private void OnApplicationQuit()
+	{
+		// Initilaize listeners
+		consumptionDropdown.onValueChanged.RemoveListener(OnOptionChanged);
+		filterRange.minSlider.onValueChanged.RemoveListener(OnMinValueChanged);
+		filterRange.maxSlider.onValueChanged.RemoveListener(OnMaxValueChanged);
+
+		UpdateFilterScale(0);
+	}
+
 	//
 	// Event Methods
 	//
@@ -76,6 +85,7 @@ public class ConsumptionsGUI : MonoBehaviour
 			filterRange.range.material.SetFloat("_Min", normalizedMin);
 
 		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
+		neighbourhood.UpdateBuildingActives(normalizedMin, normalizedMax);
 	}
 
 	private void OnMaxValueChanged(float normalizedMax)
@@ -95,6 +105,7 @@ public class ConsumptionsGUI : MonoBehaviour
 			filterRange.range.material.SetFloat("_Max", normalizedMax);
 
 		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
+		neighbourhood.UpdateBuildingActives(normalizedMin, normalizedMax);
 	}
 
 	//
