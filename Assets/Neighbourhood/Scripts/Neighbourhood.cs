@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
 public class Consumption
 {
 	public string name;
@@ -31,8 +30,8 @@ public class Neighbourhood : MonoBehaviour
 	private MeshRenderer[] buildings = null;
 	private Consumption selectedConsumption;
 
-	private readonly List<Consumption> consumptions = new List<Consumption>();
-	public List<Consumption> Consumptions { get { return consumptions; } }
+	public List<Consumption> Consumptions { private set; get; }
+	
 	public readonly Color DefaultColor = Color.white;
 	public readonly Color OutOfRangeColor = Color.grey;
 	private const float InvMaxColorVal = 1.0f / 255.0f;
@@ -44,6 +43,8 @@ public class Neighbourhood : MonoBehaviour
 	private void Awake()
 	{
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
+
+		Consumptions = new List<Consumption>();
 		InitConsumptions();
 	}
 
@@ -66,7 +67,7 @@ public class Neighbourhood : MonoBehaviour
 	public void UpdateNeighbourhoodConsumption(int option)
 	{
 		int length = buildings.Length;
-		selectedConsumption = consumptions[option];
+		selectedConsumption = Consumptions[option];
 		// Normalized buffer
 		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
 		for (int j = 0; j < length; ++j)
@@ -128,12 +129,12 @@ public class Neighbourhood : MonoBehaviour
 				Array.Copy(splitLine, 2, valuesStr, 0, valuesLength);
 				consumption.values = Array.ConvertAll(valuesStr, new Converter<string, float>((str) => { return float.Parse(str); }));
 				
-				consumptions.Add(consumption);
+				Consumptions.Add(consumption);
 			}
 		}
 
 		// Initialize min and max value for each consumption
-		foreach (var consumption in consumptions)
+		foreach (var consumption in Consumptions)
 		{
 			consumption.minVal = GetMinValue(consumption.values.ToArray());
 			consumption.maxVal = GetMaxValue(consumption.values.ToArray());
