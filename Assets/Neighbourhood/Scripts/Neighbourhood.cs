@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Consumption
 {
@@ -24,14 +25,21 @@ public class Consumption
 
 public class Neighbourhood : MonoBehaviour
 {
-	//[Header("UI References")]
+	[Header("UI References")]
+	[SerializeField] private BuildingConsumptionPanel bcPanel = default;
+
 	//[Header("Prefabs")]
 
 	private MeshRenderer[] buildings = null;
 	private Consumption selectedConsumption;
 
 	public List<Consumption> Consumptions { private set; get; }
-	
+	// Building properties
+	public bool[] BuildingActives { private set; get; }
+
+	private Ray ray;
+	private RaycastHit hit;
+
 	public readonly Color DefaultColor = Color.white;
 	public readonly Color OutOfRangeColor = Color.grey;
 	private const float InvMaxColorVal = 1.0f / 255.0f;
@@ -42,16 +50,24 @@ public class Neighbourhood : MonoBehaviour
 
 	private void Awake()
 	{
+        Debug.Assert(bcPanel != null, "Neighbourhood: Missing bcPanel");
+
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
 
-		Consumptions = new List<Consumption>();
 		InitConsumptions();
+		InitBuildingActives();
 	}
 
 	private void Start()
 	{
 		UpdateNeighbourhoodConsumption(0);
 		UpdateSelectedNeighbourhoodColors(0.0f, 1.0f);
+		UpdateBuildingActives(0.0f, 1.0f);
+	}
+
+	private void Update()
+	{
+		ShowBuildingValuePanel();
 	}
 
 	//
@@ -68,6 +84,12 @@ public class Neighbourhood : MonoBehaviour
 	{
 		int length = buildings.Length;
 		selectedConsumption = Consumptions[option];
+
+		// Update building consumption panel
+		bcPanel.SetTitle(selectedConsumption.name);
+		bcPanel.SetUnits(selectedConsumption.units);
+		bcPanel.SetTextColor(selectedConsumption.color);
+
 		// Normalized buffer
 		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
 		for (int j = 0; j < length; ++j)
@@ -90,12 +112,25 @@ public class Neighbourhood : MonoBehaviour
 		}
 	}
 
+	public void UpdateBuildingActives(float normalizedMin, float normalizedMax)
+	{
+		int length = buildings.Length;
+		// Normalized buffer
+		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
+		for (int j = 0; j < length; ++j)
+		{
+			BuildingActives[j] = ((buffer[j] >= normalizedMin) && (buffer[j] <= normalizedMax));
+		}
+	}
+
 	//
 	// Private Methods
 	//
 
 	private void InitConsumptions()
 	{
+		Consumptions = new List<Consumption>();
+
 		using (StreamReader sr = new StreamReader($"Data{Path.DirectorySeparatorChar}Consumption.csv"))
 		{
 			// Read and skip first row (headers)
@@ -125,6 +160,9 @@ public class Neighbourhood : MonoBehaviour
 				};
 
 				int valuesLength = length - 2;
+				if (valuesLength != buildings.Length)
+					Debug.LogError($"Neighbourhood: Mismatch in buildings count. Check Data{Path.DirectorySeparatorChar}Consumption.csv.");
+				
 				string[] valuesStr = new string[valuesLength];
 				Array.Copy(splitLine, 2, valuesStr, 0, valuesLength);
 				consumption.values = Array.ConvertAll(valuesStr, new Converter<string, float>((str) => { return float.Parse(str); }));
@@ -138,6 +176,16 @@ public class Neighbourhood : MonoBehaviour
 		{
 			consumption.minVal = GetMinValue(consumption.values.ToArray());
 			consumption.maxVal = GetMaxValue(consumption.values.ToArray());
+		}
+	}
+
+	private void InitBuildingActives()
+	{
+		int length = buildings.Length;
+		BuildingActives = new bool[length];
+		for (int i = 0; i < length; ++i)
+		{
+			BuildingActives[i] = true;
 		}
 	}
 
@@ -183,5 +231,44 @@ public class Neighbourhood : MonoBehaviour
 		}
 
 		return buffer;
+	}
+
+	private void ShowBuildingValuePanel()
+	{
+		Vector3 mousePos = Input.mousePosition;
+		Vector3 viewportMousePos = Camera.main.ScreenToViewportPoint(mousePos);
+
+		// Check if mouse is within camera view
+		if ((viewportMousePos.x < 0 || viewportMousePos.x > 1) || (viewportMousePos.y < 0 || viewportMousePos.y > 1))
+		{
+			bcPanel.gameObject.SetActive(false);
+			return;
+		}
+
+		// Check if ray hits UI object
+		if (EventSystem.current.IsPointerOverGameObject())
+		{
+			bcPanel.gameObject.SetActive(false);
+			return;
+		}
+
+		// Check if mouse hovers over a building within the neighbourhood
+		ray = Camera.main.ScreenPointToRay(mousePos);
+		if (Physics.Raycast(ray, out hit))
+		{
+			int index = hit.collider.transform.GetSiblingIndex();
+			if (!BuildingActives[index])
+			{
+				bcPanel.gameObject.SetActive(false);
+				return;
+			}
+
+			bcPanel.gameObject.SetActive(true);
+			bcPanel.SetValue(selectedConsumption.values[index]);
+		}
+		else
+		{
+			bcPanel.gameObject.SetActive(false);
+		}
 	}
 }
