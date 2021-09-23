@@ -35,19 +35,25 @@ public class InputEvent<T>
 
 public class InputHandler : MonoBehaviour
 {
-    public bool longPressAsRMB;
-    public float longPressDelay = 1f;
+    private bool ignoreUI;
+    private EventSystem eventSystem;
+    private Camera cam;
+    // Ground plane (for raycasting)
+    private readonly Plane plane = new Plane(Vector3.up, Vector3.zero);
 
-    public bool LongPressAsRMB { get { return longPressAsRMB; } set { longPressAsRMB = value; } }
+    public bool LongPressAsRMB { private set; get; }
+    public bool IsPointerInUI { private set; get; }
+    public Vector3 MouseDelta { private set; get; }
+    public Vector3 PreviousMousePos { private set; get; }
 
     // Dragging
-    public bool IsLeftMouseDown { get; private set; }
-    public bool IsRightMouseDown { get; private set; }
-    public bool IsDraggingLeft { get; private set; }
-    public bool IsDraggingRight { get; private set; }
-    public Vector3 StartLeftDragPos { get; private set; }
-    public Vector3 StartRightDragPos { get; private set; }
-    public bool IsLongPress { get; private set; }
+    public bool IsLeftMouseDown { private set; get; }
+    public bool IsRightMouseDown { private set; get; }
+    public bool IsDraggingLeft { private set; get; }
+    public bool IsDraggingRight { private set; get; }
+    public Vector3 StartLeftDragPos { private set; get; }
+    public Vector3 StartRightDragPos { private set; get; }
+    public bool IsLongPress { private set; get; }
 
     public delegate void OnMouseEvent();
     public InputEvent<OnMouseEvent> OnLeftMouseDown = new InputEvent<OnMouseEvent>();
@@ -63,23 +69,6 @@ public class InputHandler : MonoBehaviour
 
     public delegate void OnMouseWheelEvent(float delta);
     public InputEvent<OnMouseWheelEvent> OnMouseWheel = new InputEvent<OnMouseWheelEvent>();
-
-    private EventSystem eventSystem;
-    public bool IsPointerInUI { get; private set; }
-    private bool ignoreIU;
-    private Vector3 lastMousePosition;
-    private float longPressTimeout;
-    public Vector3 MouseDelta { get; private set; }
-    public Vector3 PreviousMousePos { get { return lastMousePosition; } }
-
-    // Ground plane (for raycasting)
-    private readonly Plane plane = new Plane(Vector3.up, Vector3.zero);
-    private Camera cam;
-
-    public int PixelDragThreshold
-    {
-        get { return eventSystem.pixelDragThreshold; }
-    }
 
     //
     // Unity Methods
@@ -109,30 +98,9 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        MouseDelta = Input.mousePosition - lastMousePosition;
+        MouseDelta = Input.mousePosition - PreviousMousePos;
 
-        if (Input.simulateMouseWithTouches)
-        {
-            if (Input.touchCount > 1)
-            {
-                if (IsLeftMouseDown)
-                {
-                    // Fake a LMB up event to stop single-touch drags/clicks
-                    HandleLeftMouseUp();
-                }
-                else if (IsRightMouseDown)
-                {
-                    // Fake a RMB up event to stop single-touch drags/clicks
-                    HandleRightMouseUp();
-                }
-            }
-        }
-
-        IsPointerInUI = eventSystem.IsPointerOverGameObject() && !ignoreIU;
-        for (int i = 0; i < Input.touchCount; i++)
-        {
-            IsPointerInUI |= eventSystem.IsPointerOverGameObject(Input.GetTouch(i).fingerId);
-        }
+        IsPointerInUI = eventSystem.IsPointerOverGameObject() && !ignoreUI;
 
         // Can only click or start a drag when the cursor is outside the UI
         if (!IsPointerInUI)
@@ -175,19 +143,22 @@ public class InputHandler : MonoBehaviour
             HandleRightMouseUp();
         }
 
-        lastMousePosition = Input.mousePosition;
+        PreviousMousePos = Input.mousePosition;
     }
-
 
     //
     // Public Methods
     //
 
+    public int PixelDragThreshold
+	{
+        get { return eventSystem.pixelDragThreshold; }
+	}
+
     public void IgnoreUI(bool ignore)
     {
-        ignoreIU = ignore;
+        ignoreUI = ignore;
     }
-
 
     //
     // Private Methods
@@ -207,8 +178,6 @@ public class InputHandler : MonoBehaviour
         IsLeftMouseDown = true;
         StartLeftDragPos = Input.mousePosition;
         OnLeftMouseDown.LastHandler();
-
-        longPressTimeout = Time.time + longPressDelay;
     }
 
     private void HandleRightMousePressed()
@@ -233,17 +202,7 @@ public class InputHandler : MonoBehaviour
                 IsDraggingLeft = true;
                 OnLeftMouseDragStart.LastHandler();
             }
-            else if (longPressAsRMB && Input.simulateMouseWithTouches && Time.time >= longPressTimeout)
-            {
-                // Fake a LMB up event
-                HandleLeftMouseUp();
-
-                IsLongPress = true;
-
-                // Fake a RMB down event
-                HandleRightMousePressed();
-            }
-        }
+		}
     }
 
     private void HandleRightMouseDown()
@@ -292,16 +251,12 @@ public class InputHandler : MonoBehaviour
         }
 
         IsRightMouseDown = false;
-
-        longPressTimeout = 0;
-        IsLongPress = false;
-    }
+	}
 
     public bool GetWorldPoint(Vector3 screenPos, out Vector3 pt)
     {
-        float distance;
-        Ray ray = cam.ScreenPointToRay(screenPos);
-        if (plane.Raycast(ray, out distance))
+		Ray ray = cam.ScreenPointToRay(screenPos);
+		if (plane.Raycast(ray, out float distance))
         {
             pt = ray.GetPoint(distance);
             return true;
