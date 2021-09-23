@@ -83,21 +83,20 @@ public class MapCamera : MonoBehaviour
 	private void Awake()
 	{
 		Debug.Assert(inputHandler != null, "MapCamera: Missing inputHandler");
+		Debug.Assert(map != null, "MapCamera: Missing map");
+		Debug.Assert(pivot != null, "MapCamera: Missing pivot");
 	}
 
 	private void Start()
 	{
 		// Initialize Input
-		if (inputHandler)
-		{
-			inputHandler.OnLeftMouseDragStart += OnLeftMouseDragStart;
-			inputHandler.OnRightMouseDragStart += OnRightMouseDragStart;
-			inputHandler.OnLeftMouseDrag += OnLeftMouseDrag;
-			inputHandler.OnRightMouseDrag += OnRightMouseDrag;
-			inputHandler.OnLeftMouseDragEnd += OnLeftMouseDragEnd;
-			inputHandler.OnRightMouseDragEnd += OnRightMouseDragEnd;
-			inputHandler.OnMouseWheel += OnMouseWheel;
-		}
+		inputHandler.OnLeftMouseDragStart += OnLeftMouseDragStart;
+		inputHandler.OnRightMouseDragStart += OnRightMouseDragStart;
+		inputHandler.OnLeftMouseDrag += OnLeftMouseDrag;
+		inputHandler.OnRightMouseDrag += OnRightMouseDrag;
+		inputHandler.OnLeftMouseDragEnd += OnLeftMouseDragEnd;
+		inputHandler.OnRightMouseDragEnd += OnRightMouseDragEnd;
+		inputHandler.OnMouseWheel += OnMouseWheel;
 
 		// Adjust camera position for map-view-area
 		UpdatePosition();
@@ -239,7 +238,7 @@ public class MapCamera : MonoBehaviour
 		Vector3 current = cam.transform.position;
 		Vector3 target = cam.transform.position + new Vector3(offset.x, 0.0f, offset.z);
 
-		Vector3 updatedCamPosition = Vector3.MoveTowards(current, target, panScale);
+		Vector3 updatedCamPosition = Vector3.MoveTowards(current, target, Vector3.Distance(current, target) * panScale);
 		cam.transform.position = new Vector3(Mathf.Clamp(updatedCamPosition.x, map.position.x - MaxDistanceToMapCentre, map.position.x + MaxDistanceToMapCentre),
 											 updatedCamPosition.y,
 											 Mathf.Clamp(updatedCamPosition.z, map.position.z - MaxDistanceToMapCentre, map.position.z + MaxDistanceToMapCentre));

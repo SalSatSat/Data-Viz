@@ -118,7 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bffea42b24f7cfb4698d07886f7dcfdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapController: {fileID: 0}
   inputHandler: {fileID: 0}
   map: {fileID: 0}
   pivot: {fileID: 6699738974497287300}
@@ -132,7 +131,7 @@ MonoBehaviour:
   horizontalOrbitScale: 0.5
   verticalOrbitScale: 0.5
   zoomScale: 15
-  panScale: 0.75
+  panScale: 0.5
 --- !u!1 &6699738975265932629
 GameObject:
   m_ObjectHideFlags: 0

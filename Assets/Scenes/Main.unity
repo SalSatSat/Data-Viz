@@ -264,6 +264,10 @@ PrefabInstance:
       propertyPath: bcPanel
       value: 
       objectReference: {fileID: 5602619903841333529}
+    - target: {fileID: 3233048584461386135, guid: 6325e552fb6b0f04586e0fc217431e64, type: 3}
+      propertyPath: inputHandler
+      value: 
+      objectReference: {fileID: 151931304}
     - target: {fileID: 7062212830041324927, guid: 6325e552fb6b0f04586e0fc217431e64, type: 3}
       propertyPath: m_Name
       value: Neighbourhood
