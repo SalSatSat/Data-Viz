@@ -25,6 +25,9 @@ public class Consumption
 
 public class Neighbourhood : MonoBehaviour
 {
+	[Header("References")]
+	[SerializeField] private InputHandler inputHandler = default;
+
 	[Header("UI References")]
 	[SerializeField] private BuildingConsumptionPanel bcPanel = default;
 
@@ -50,6 +53,7 @@ public class Neighbourhood : MonoBehaviour
 
 	private void Awake()
 	{
+		Debug.Assert(inputHandler != null, "Neighbourhood: Missing inputHandler");
         Debug.Assert(bcPanel != null, "Neighbourhood: Missing bcPanel");
 
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
@@ -238,15 +242,10 @@ public class Neighbourhood : MonoBehaviour
 		Vector3 mousePos = Input.mousePosition;
 		Vector3 viewportMousePos = Camera.main.ScreenToViewportPoint(mousePos);
 
-		// Check if mouse is within camera view
-		if ((viewportMousePos.x < 0 || viewportMousePos.x > 1) || (viewportMousePos.y < 0 || viewportMousePos.y > 1))
-		{
-			bcPanel.gameObject.SetActive(false);
-			return;
-		}
+		bool isMouseOutsideCamView = (viewportMousePos.x < 0 || viewportMousePos.x > 1) ||
+									 (viewportMousePos.y < 0 || viewportMousePos.y > 1);
 
-		// Check if ray hits UI object
-		if (EventSystem.current.IsPointerOverGameObject())
+		if (isMouseOutsideCamView || inputHandler.IsPointerInUI)
 		{
 			bcPanel.gameObject.SetActive(false);
 			return;
@@ -257,14 +256,9 @@ public class Neighbourhood : MonoBehaviour
 		if (Physics.Raycast(ray, out hit))
 		{
 			int index = hit.collider.transform.GetSiblingIndex();
-			if (!BuildingActives[index])
-			{
-				bcPanel.gameObject.SetActive(false);
-				return;
-			}
 
-			bcPanel.gameObject.SetActive(true);
 			bcPanel.SetValue(selectedConsumption.values[index]);
+			bcPanel.gameObject.SetActive(BuildingActives[index]);
 		}
 		else
 		{
