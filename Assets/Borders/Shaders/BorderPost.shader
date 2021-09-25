@@ -1,4 +1,12 @@
-﻿Shader "Custom/BorderPost"
+﻿// Copyright (C) Muhammad Salihin Bin Zaol-kefli
+// All rights reserved.
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+//
+// Author:  Muhammad Salihin Bin Zaol-kefli  (salsatsat@gmail.com)
+
+Shader "Custom/BorderPost"
 {
 	Properties
 	{
@@ -207,27 +215,5 @@
 				}
 			ENDCG
 		}
-
-		// #3: Debug pass
-        Pass
-        {
-            CGPROGRAM
-                float4 _ColorMask;
-                float _Multiplier;
-                float _Divider;
-
-                half4 frag(v2f i) : SV_Target
-                {
-                    float4 col = tex2D(_MainTex, i.uv);
-                    if (all(_ColorMask))
-                        return _Multiplier * col * col.a / _Divider;
-
-                    col *= _ColorMask;
-                    float x = (col.r + col.g + col.b + col.a) / (_ColorMask.r + _ColorMask.g + _ColorMask.b + _ColorMask.a);
-                    x = _Multiplier * x / _Divider;
-                    return half4(x, x, x, 1);
-                }
-            ENDCG
-        }
 	}
 }

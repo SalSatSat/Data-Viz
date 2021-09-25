@@ -1,4 +1,12 @@
-﻿Shader "Custom/BorderDrawIds"
+﻿// Copyright (C) Muhammad Salihin Bin Zaol-kefli
+// All rights reserved.
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+//
+// Author:  Muhammad Salihin Bin Zaol-kefli  (salsatsat@gmail.com)
+
+Shader "Custom/BorderDrawIds"
 {
 	SubShader
 	{
