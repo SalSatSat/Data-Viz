@@ -5,7 +5,6 @@
 // of the MIT license. See the LICENSE file for details.
 //
 // Author:  Muhammad Salihin Bin Zaol-kefli  (salsatsat@gmail.com)
-#define DEBUG_BORDER
 
 using System;
 using System.Collections.Generic;
@@ -51,44 +50,6 @@ public class BorderEffect : MonoBehaviour
 	private static readonly List<Renderer> renderers = new List<Renderer>();
 	private static readonly List<int> layers = new List<int>();
 	private static readonly Color BorderColorOffset = new Color(0.25f, 0.25f, 0.25f);
-
-#if DEBUG_BORDER
-	public enum Stage
-	{
-		Final,
-		Blur2,
-		Blur1,
-		Edges,
-		ObjectIds
-	}
-	public enum Channel
-	{
-		None = 0,
-		Red = 1,
-		Green = 2,
-		Blue = 4,
-		Alpha = 8,
-		All = 15,
-	}
-
-	[Header("Debug")]
-	[SerializeField] private Stage stage = Stage.Final;
-	[SerializeField] private Channel channels = Channel.All;
-	[Range(1, 10)]
-	[SerializeField] private float multiplier = 1;
-	[Range(1, 10)]
-	[SerializeField] private float divider = 1;
-	[SerializeField]
-	private Color[] colors = {
-		Color.red,
-		Color.green,
-		Color.blue,
-		Color.yellow,
-		Color.magenta,
-		Color.cyan,
-		Color.white,
-	};
-#endif
 
 	//
 	// Unity Methods
@@ -155,11 +116,6 @@ public class BorderEffect : MonoBehaviour
 		idsRT.DiscardContents();
 		borderRT.DiscardContents();
 		tempRT.DiscardContents();
-	}
-
-	private void OnDestroy()
-	{
-		ReleaseBuffer();
 	}
 
 	//
@@ -254,26 +210,8 @@ public class BorderEffect : MonoBehaviour
 		postMaterial.SetTexture("_IdsTex", idsRT, UnityEngine.Rendering.RenderTextureSubElement.Color);
 		postMaterial.SetTexture("_IdsDepth", idsRT, UnityEngine.Rendering.RenderTextureSubElement.Depth);
 
-#if DEBUG_BORDER
-		// Set DEBUG post-processing parameters
-		postMaterial.SetFloat("_Multiplier", multiplier);
-		postMaterial.SetFloat("_Divider", divider);
-		postMaterial.SetColor("_ColorMask", new Color(
-			channels.HasFlag(Channel.Red) ? 1 : 0,
-			channels.HasFlag(Channel.Green) ? 1 : 0,
-			channels.HasFlag(Channel.Blue) ? 1 : 0,
-			channels.HasFlag(Channel.Alpha) ? 1 : 0
-		));
-
-		if (stage == Stage.ObjectIds) { Graphics.Blit(idsRT, destination, postMaterial, 3); return; }
-#endif
-
 		// Post-process pass 1: draw edge pixels (pixels whose neightbour has a different object id)
 		Graphics.Blit(idsRT, borderRT, postMaterial, 0);
-
-#if DEBUG_BORDER
-		if (stage == Stage.Edges) { Graphics.Blit(borderRT, destination, postMaterial, 3); return; }
-#endif
 
 		// Post-process pass 2: blur edge pixels in two separable passes
 		if (blur)
@@ -281,15 +219,10 @@ public class BorderEffect : MonoBehaviour
 			// First blur pass (horizontal)
 			postMaterial.SetVector("_BlurDirection", Vector2.right);
 			Graphics.Blit(borderRT, tempRT, postMaterial, 1);
-#if DEBUG_BORDER
-			if (stage == Stage.Blur1) { Graphics.Blit(tempRT, destination, postMaterial, 3); return; }
-#endif
+		
 			// Second blur pass (vertical)
 			postMaterial.SetVector("_BlurDirection", Vector2.up);
 			Graphics.Blit(tempRT, borderRT, postMaterial, 1);
-#if DEBUG_BORDER
-			if (stage == Stage.Blur2) { Graphics.Blit(borderRT, destination, postMaterial, 3); return; }
-#endif
 		}
 
 		// Copy rendered scene to screen
@@ -298,40 +231,4 @@ public class BorderEffect : MonoBehaviour
 		// Post-process pass 3: overlay border with object colors over rendered scene
 		Graphics.Blit(borderRT, destination, postMaterial, 2);
 	}
-
-	#region Buffer
-
-	private ComputeBuffer buffer = null;
-
-	private void CreateBuffer(int count, int stride)
-	{
-		ReleaseBuffer();
-
-		buffer = new ComputeBuffer(count, stride, ComputeBufferType.Default);
-	}
-
-	private void ReleaseBuffer()
-	{
-		if (buffer != null)
-		{
-			buffer.Release();
-			buffer = null;
-		}
-	}
-
-	//public void SetData(Material material, string propName, Array data, int stride)
-	//{
-	//	// Check if new buffer needs to be created
-	//	if (buffer == null ||
-	//		buffer.count != data.Length)
-	//	{
-	//		CreateBuffer(data.Length, stride);
-	//		material.SetInt(propName + "Length", data.Length);
-	//		material.SetBuffer(propName, buffer);
-	//	}
-
-	//	buffer.SetData(data);
-	//}
-
-	#endregion
 }
