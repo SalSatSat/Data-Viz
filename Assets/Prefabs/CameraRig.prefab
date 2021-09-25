@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 6699738974526175993}
   - component: {fileID: 6699738974526175992}
   - component: {fileID: 6613791360712862874}
+  - component: {fileID: 4301479743654805531}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -132,6 +133,37 @@ MonoBehaviour:
   verticalOrbitScale: 0.5
   zoomScale: 15
   panScale: 0.5
+--- !u!114 &4301479743654805531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6699738974526175994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fc7991570fcc04e858b1b8e0077ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idsShader: {fileID: 4800000, guid: 0626483d966669c46a2a4b88fc348989, type: 3}
+  postShader: {fileID: 4800000, guid: 5d30a77e70b9df449be0640e195173c7, type: 3}
+  color: {r: 0, g: 1, b: 0, a: 1}
+  intensity: 1
+  blur: 1
+  blurSize: 3
+  depthOffset: 0.001
+  stage: 0
+  channels: 15
+  multiplier: 1
+  divider: 1
+  colors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - {r: 1, g: 0, b: 1, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6699738975265932629
 GameObject:
   m_ObjectHideFlags: 0

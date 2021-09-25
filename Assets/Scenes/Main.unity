@@ -237,6 +237,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1193733384 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4301479743654805531, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
+  m_PrefabInstance: {fileID: 6699738975590554974}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fc7991570fcc04e858b1b8e0077ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1740543565 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6613791360712862874, guid: 27a689c33f46bf5449f5c4215528f873, type: 3}
@@ -268,6 +279,10 @@ PrefabInstance:
       propertyPath: inputHandler
       value: 
       objectReference: {fileID: 151931304}
+    - target: {fileID: 3233048584461386135, guid: 6325e552fb6b0f04586e0fc217431e64, type: 3}
+      propertyPath: borderEffect
+      value: 
+      objectReference: {fileID: 1193733384}
     - target: {fileID: 7062212830041324927, guid: 6325e552fb6b0f04586e0fc217431e64, type: 3}
       propertyPath: m_Name
       value: Neighbourhood

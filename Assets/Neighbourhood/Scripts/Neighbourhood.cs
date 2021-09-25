@@ -27,6 +27,7 @@ public class Neighbourhood : MonoBehaviour
 {
 	[Header("References")]
 	[SerializeField] private InputHandler inputHandler = default;
+	[SerializeField] private BorderEffect borderEffect = default;
 
 	[Header("UI References")]
 	[SerializeField] private BuildingConsumptionPanel bcPanel = default;
@@ -42,6 +43,8 @@ public class Neighbourhood : MonoBehaviour
 
 	private Ray ray;
 	private RaycastHit hit;
+	private int currBuildingIndex = -1;
+	private int prevBuildingIndex = -1;
 
 	public readonly Color DefaultColor = Color.white;
 	public readonly Color OutOfRangeColor = Color.grey;
@@ -54,6 +57,7 @@ public class Neighbourhood : MonoBehaviour
 	private void Awake()
 	{
 		Debug.Assert(inputHandler != null, "Neighbourhood: Missing inputHandler");
+		Debug.Assert(borderEffect != null, "Neighbourhood: Missing borderEffect");
         Debug.Assert(bcPanel != null, "Neighbourhood: Missing bcPanel");
 
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
@@ -69,9 +73,33 @@ public class Neighbourhood : MonoBehaviour
 		UpdateBuildingActives(0.0f, 1.0f);
 	}
 
-	private void Update()
+	private void LateUpdate()
 	{
-		ShowBuildingValuePanel();
+		// Only highlight 1 building at a time
+		// Only show 1 building info at a time
+		if (IsHoverBuilding())
+		{
+			// Remove old hovered building
+			if (IsIndexWithinRange(currBuildingIndex, buildings.Length))
+				borderEffect.Remove(buildings[currBuildingIndex]);
+
+			// Add current hovered building
+			currBuildingIndex = hit.collider.transform.GetSiblingIndex();
+			if (IsIndexWithinRange(currBuildingIndex, buildings.Length))
+			{
+				borderEffect.Add(buildings[currBuildingIndex]);
+
+				bcPanel.SetValue(selectedConsumption.values[currBuildingIndex]);
+				bcPanel.gameObject.SetActive(BuildingActives[currBuildingIndex]);
+			}
+		}
+		else
+		{
+			if (IsIndexWithinRange(currBuildingIndex, buildings.Length))
+				borderEffect.Remove(buildings[currBuildingIndex]);
+			
+			bcPanel.gameObject.SetActive(false);
+		}
 	}
 
 	//
@@ -93,6 +121,8 @@ public class Neighbourhood : MonoBehaviour
 		bcPanel.SetTitle(selectedConsumption.name);
 		bcPanel.SetUnits(selectedConsumption.units);
 		bcPanel.SetTextColor(selectedConsumption.color);
+
+		borderEffect.SetColor(selectedConsumption.color);
 
 		// Normalized buffer
 		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
@@ -237,7 +267,12 @@ public class Neighbourhood : MonoBehaviour
 		return buffer;
 	}
 
-	private void ShowBuildingValuePanel()
+	private bool IsIndexWithinRange(int index, int length)
+	{
+		return (index >= 0 && index < length);
+	}
+
+	private bool IsHoverBuilding()
 	{
 		Vector3 mousePos = Input.mousePosition;
 		Vector3 viewportMousePos = Camera.main.ScreenToViewportPoint(mousePos);
@@ -247,22 +282,25 @@ public class Neighbourhood : MonoBehaviour
 
 		if (isMouseOutsideCamView || inputHandler.IsPointerInUI)
 		{
-			bcPanel.gameObject.SetActive(false);
-			return;
+			return false;
+			//bcPanel.gameObject.SetActive(false);
+			//return;
 		}
 
 		// Check if mouse hovers over a building within the neighbourhood
 		ray = Camera.main.ScreenPointToRay(mousePos);
-		if (Physics.Raycast(ray, out hit))
-		{
-			int index = hit.collider.transform.GetSiblingIndex();
+		//if (Physics.Raycast(ray, out hit))
+		//{
+		//	int index = hit.collider.transform.GetSiblingIndex();
 
-			bcPanel.SetValue(selectedConsumption.values[index]);
-			bcPanel.gameObject.SetActive(BuildingActives[index]);
-		}
-		else
-		{
-			bcPanel.gameObject.SetActive(false);
-		}
+		//	bcPanel.SetValue(selectedConsumption.values[index]);
+		//	bcPanel.gameObject.SetActive(BuildingActives[index]);
+		//}
+		//else
+		//{
+		//	bcPanel.gameObject.SetActive(false);
+		//}
+
+		return Physics.Raycast(ray, out hit);
 	}
 }
