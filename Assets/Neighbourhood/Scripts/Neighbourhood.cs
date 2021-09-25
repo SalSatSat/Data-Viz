@@ -13,7 +13,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Consumption
+public class BuildingInfo
 {
 	public string name;
 	public string units;
@@ -30,25 +30,25 @@ public class Neighbourhood : MonoBehaviour
 	[SerializeField] private BorderEffect borderEffect = default;
 
 	[Header("UI References")]
-	[SerializeField] private BuildingConsumptionPanel bcPanel = default;
+	[SerializeField] private BuildingInfoPanel biPanel = default;
 
 	//[Header("Prefabs")]
 
 	private MeshRenderer[] buildings = null;
-	private Consumption selectedConsumption;
+	private BuildingInfo selectedBuildingInfo;
 
-	public List<Consumption> Consumptions { private set; get; }
+	public List<BuildingInfo> BuildingInfos { private set; get; }
 	// Building properties
 	public bool[] BuildingActives { private set; get; }
 
 	private Ray ray;
 	private RaycastHit hit;
 	private int currBuildingIndex = -1;
-	private int prevBuildingIndex = -1;
 
 	public readonly Color DefaultColor = Color.white;
 	public readonly Color OutOfRangeColor = Color.grey;
 	private const float InvMaxColorVal = 1.0f / 255.0f;
+	private readonly string filename = $"Data{Path.DirectorySeparatorChar}BuildingInfo.csv";
 
 	//
 	// Unity Methods
@@ -58,17 +58,17 @@ public class Neighbourhood : MonoBehaviour
 	{
 		Debug.Assert(inputHandler != null, "Neighbourhood: Missing inputHandler");
 		Debug.Assert(borderEffect != null, "Neighbourhood: Missing borderEffect");
-        Debug.Assert(bcPanel != null, "Neighbourhood: Missing bcPanel");
+		Debug.Assert(biPanel != null, "Neighbourhood: Missing biPanel");
 
 		buildings = Array.ConvertAll(gameObject.GetComponentsInChildren(typeof(MeshRenderer)), item => item as MeshRenderer);
 
-		InitConsumptions();
+		InitBuildingInfos();
 		InitBuildingActives();
 	}
 
 	private void Start()
 	{
-		UpdateNeighbourhoodConsumption(0);
+		UpdateNeighbourhoodInfos(0);
 		UpdateSelectedNeighbourhoodColors(0.0f, 1.0f);
 		UpdateBuildingActives(0.0f, 1.0f);
 	}
@@ -87,10 +87,11 @@ public class Neighbourhood : MonoBehaviour
 			currBuildingIndex = hit.collider.transform.GetSiblingIndex();
 			if (IsIndexWithinRange(currBuildingIndex, buildings.Length))
 			{
-				borderEffect.Add(buildings[currBuildingIndex]);
+				if (BuildingActives[currBuildingIndex])
+					borderEffect.Add(buildings[currBuildingIndex]);
 
-				bcPanel.SetValue(selectedConsumption.values[currBuildingIndex]);
-				bcPanel.gameObject.SetActive(BuildingActives[currBuildingIndex]);
+				biPanel.SetValue(selectedBuildingInfo.values[currBuildingIndex]);
+				biPanel.gameObject.SetActive(BuildingActives[currBuildingIndex]);
 			}
 		}
 		else
@@ -98,7 +99,7 @@ public class Neighbourhood : MonoBehaviour
 			if (IsIndexWithinRange(currBuildingIndex, buildings.Length))
 				borderEffect.Remove(buildings[currBuildingIndex]);
 			
-			bcPanel.gameObject.SetActive(false);
+			biPanel.gameObject.SetActive(false);
 		}
 	}
 
@@ -112,23 +113,23 @@ public class Neighbourhood : MonoBehaviour
 	// Public Methods
 	//
 
-	public void UpdateNeighbourhoodConsumption(int option)
+	public void UpdateNeighbourhoodInfos(int option)
 	{
 		int length = buildings.Length;
-		selectedConsumption = Consumptions[option];
+		selectedBuildingInfo = BuildingInfos[option];
 
-		// Update building consumption panel
-		bcPanel.SetTitle(selectedConsumption.name);
-		bcPanel.SetUnits(selectedConsumption.units);
-		bcPanel.SetTextColor(selectedConsumption.color);
+		// Update building info panel
+		biPanel.SetTitle(selectedBuildingInfo.name);
+		biPanel.SetUnits(selectedBuildingInfo.units);
+		biPanel.SetTextColor(selectedBuildingInfo.color);
 
-		borderEffect.SetColor(selectedConsumption.color);
+		borderEffect.SetColor(selectedBuildingInfo.color);
 
 		// Normalized buffer
-		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
+		var buffer = NormalizeBuffer(selectedBuildingInfo.values.ToArray());
 		for (int j = 0; j < length; ++j)
 		{
-			buildings[j].material.color = Color.Lerp(DefaultColor, selectedConsumption.color, buffer[j]);
+			buildings[j].material.color = Color.Lerp(DefaultColor, selectedBuildingInfo.color, buffer[j]);
 		}
 	}
 
@@ -136,13 +137,13 @@ public class Neighbourhood : MonoBehaviour
 	{
 		int length = buildings.Length;
 		// Normalized buffer
-		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
+		var buffer = NormalizeBuffer(selectedBuildingInfo.values.ToArray());
 		for (int j = 0; j < length; ++j)
 		{
 			if ((buffer[j] < normalizedMin) || (buffer[j] > normalizedMax))
 				buildings[j].material.color = OutOfRangeColor;
 			else
-				buildings[j].material.color = Color.Lerp(DefaultColor, selectedConsumption.color, buffer[j]);
+				buildings[j].material.color = Color.Lerp(DefaultColor, selectedBuildingInfo.color, buffer[j]);
 		}
 	}
 
@@ -150,7 +151,7 @@ public class Neighbourhood : MonoBehaviour
 	{
 		int length = buildings.Length;
 		// Normalized buffer
-		var buffer = NormalizeBuffer(selectedConsumption.values.ToArray());
+		var buffer = NormalizeBuffer(selectedBuildingInfo.values.ToArray());
 		for (int j = 0; j < length; ++j)
 		{
 			BuildingActives[j] = ((buffer[j] >= normalizedMin) && (buffer[j] <= normalizedMax));
@@ -161,55 +162,52 @@ public class Neighbourhood : MonoBehaviour
 	// Private Methods
 	//
 
-	private void InitConsumptions()
+	private void InitBuildingInfos()
 	{
-		Consumptions = new List<Consumption>();
+		BuildingInfos = new List<BuildingInfo>();
 
-		using (StreamReader sr = new StreamReader($"Data{Path.DirectorySeparatorChar}Consumption.csv"))
+		using (StreamReader sr = new StreamReader(filename))
 		{
 			// Read and skip first row (headers)
 			sr.ReadLine();
 
-			// Read the rest of lines and initialize consumption properties
+			// Read the rest of lines and initialize info properties
 			while (!sr.EndOfStream)
 			{
 				var line = sr.ReadLine();
 				var splitLine = line.Split(',');
 				var length = splitLine.Length;
 
-				var consumptionName = splitLine[0];
-				int index = consumptionName.IndexOf('(');
-
-				var color = splitLine[1];
+				var color = splitLine[2];
 				var colorComponents = color.Split('-');
 				var r = int.Parse(colorComponents[0]) * InvMaxColorVal;
 				var g = int.Parse(colorComponents[1]) * InvMaxColorVal;
 				var b = int.Parse(colorComponents[2]) * InvMaxColorVal;
 
-				var consumption = new Consumption
+				var info = new BuildingInfo
 				{
-					name = consumptionName.Substring(0, index - 1),
-					units = consumptionName.Substring(index + 1, consumptionName.Length - index - 2),
+					name = splitLine[0],
+					units = splitLine[1],
 					color = new Color(r, g, b),
 				};
 
-				int valuesLength = length - 2;
+				int valuesLength = length - 3;
 				if (valuesLength != buildings.Length)
-					Debug.LogError($"Neighbourhood: Mismatch in buildings count. Check Data{Path.DirectorySeparatorChar}Consumption.csv.");
-				
+					Debug.LogError($"Neighbourhood: Mismatch in buildings count. Check {filename}.");
+
 				string[] valuesStr = new string[valuesLength];
-				Array.Copy(splitLine, 2, valuesStr, 0, valuesLength);
-				consumption.values = Array.ConvertAll(valuesStr, new Converter<string, float>((str) => { return float.Parse(str); }));
-				
-				Consumptions.Add(consumption);
+				Array.Copy(splitLine, 3, valuesStr, 0, valuesLength);
+				info.values = Array.ConvertAll(valuesStr, new Converter<string, float>((str) => { return float.Parse(str); }));
+
+				BuildingInfos.Add(info);
 			}
 		}
 
-		// Initialize min and max value for each consumption
-		foreach (var consumption in Consumptions)
+		// Initialize min and max value for each info
+		foreach (var info in BuildingInfos)
 		{
-			consumption.minVal = GetMinValue(consumption.values.ToArray());
-			consumption.maxVal = GetMaxValue(consumption.values.ToArray());
+			info.minVal = GetMinValue(info.values.ToArray());
+			info.maxVal = GetMaxValue(info.values.ToArray());
 		}
 	}
 
@@ -281,26 +279,10 @@ public class Neighbourhood : MonoBehaviour
 									 (viewportMousePos.y < 0 || viewportMousePos.y > 1);
 
 		if (isMouseOutsideCamView || inputHandler.IsPointerInUI)
-		{
 			return false;
-			//bcPanel.gameObject.SetActive(false);
-			//return;
-		}
 
 		// Check if mouse hovers over a building within the neighbourhood
 		ray = Camera.main.ScreenPointToRay(mousePos);
-		//if (Physics.Raycast(ray, out hit))
-		//{
-		//	int index = hit.collider.transform.GetSiblingIndex();
-
-		//	bcPanel.SetValue(selectedConsumption.values[index]);
-		//	bcPanel.gameObject.SetActive(BuildingActives[index]);
-		//}
-		//else
-		//{
-		//	bcPanel.gameObject.SetActive(false);
-		//}
-
 		return Physics.Raycast(ray, out hit);
 	}
 }

@@ -10,7 +10,7 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(RectTransform))]
-public class BuildingConsumptionPanel : MonoBehaviour
+public class BuildingInfoPanel : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TMP_Text title = default;
@@ -30,9 +30,9 @@ public class BuildingConsumptionPanel : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Assert(title != null, "BuildingConsumptionPanel: Missing title");
-        Debug.Assert(value != null, "BuildingConsumptionPanel: Missing value");
-        Debug.Assert(units != null, "BuildingConsumptionPanel: Missing units");
+        Debug.Assert(title != null, "BuildingInfoPanel: Missing title");
+        Debug.Assert(value != null, "BuildingInfoPanel: Missing value");
+        Debug.Assert(units != null, "BuildingInfoPanel: Missing units");
 
         rectTransform = GetComponent<RectTransform>();
         gameObject.SetActive(false);
@@ -68,9 +68,9 @@ public class BuildingConsumptionPanel : MonoBehaviour
 	// Public Methods
 	//
 
-	public void SetTitle(string consumptionType)
+	public void SetTitle(string infoType)
 	{
-        title.text = $"{consumptionType} Consumption";
+        title.text = infoType;
 	}
 
     public void SetValue(float newValue)

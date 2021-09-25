@@ -10,16 +10,16 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
-public class ConsumptionsGUI : MonoBehaviour
+public class BuildingInfoGUI : MonoBehaviour
 {
 	[Header("UI References")]
-	[SerializeField] private TMP_Dropdown consumptionDropdown = default;
+	[SerializeField] private TMP_Dropdown infoDropdown = default;
 	[SerializeField] private FilterRange filterRange = default;
 
 	[Header("Reference")]
 	[SerializeField] private Neighbourhood neighbourhood = default;
 
-	private Consumption selectedConsumption = null;
+	private BuildingInfo selectedBuildingInfo = null;
 
 	//[Header("Prefabs")]
 
@@ -29,9 +29,9 @@ public class ConsumptionsGUI : MonoBehaviour
 
 	private void Awake()
 	{
-		Debug.Assert(consumptionDropdown != null, "ConsumptionsGUI: Missing consumptionDropdown");
-		Debug.Assert(filterRange != null, "ConsumptionsGUI: Missing filterRange");
-		Debug.Assert(neighbourhood != null, "ConsumptionsGUI: Missing neighbourhood");
+		Debug.Assert(infoDropdown != null, "BuildingInfo: Missing infoDropdown");
+		Debug.Assert(filterRange != null, "BuildingInfo: Missing filterRange");
+		Debug.Assert(neighbourhood != null, "BuildingInfo: Missing neighbourhood");
 	}
 
 	private void Start()
@@ -43,7 +43,7 @@ public class ConsumptionsGUI : MonoBehaviour
 		filterRange.range.material.SetColor("_Color3", neighbourhood.OutOfRangeColor);
 
 		// Initilaize listeners
-		consumptionDropdown.onValueChanged.AddListener(OnOptionChanged);
+		infoDropdown.onValueChanged.AddListener(OnOptionChanged);
 		filterRange.minSlider.onValueChanged.AddListener(OnMinValueChanged);
 		filterRange.maxSlider.onValueChanged.AddListener(OnMaxValueChanged);
 	}
@@ -51,7 +51,7 @@ public class ConsumptionsGUI : MonoBehaviour
 	private void OnApplicationQuit()
 	{
 		// Initilaize listeners
-		consumptionDropdown.onValueChanged.RemoveListener(OnOptionChanged);
+		infoDropdown.onValueChanged.RemoveListener(OnOptionChanged);
 		filterRange.minSlider.onValueChanged.RemoveListener(OnMinValueChanged);
 		filterRange.maxSlider.onValueChanged.RemoveListener(OnMaxValueChanged);
 
@@ -64,7 +64,7 @@ public class ConsumptionsGUI : MonoBehaviour
 
 	private void OnOptionChanged(int option)
 	{
-		neighbourhood.UpdateNeighbourhoodConsumption(option);
+		neighbourhood.UpdateNeighbourhoodInfos(option);
 		UpdateFilterScale(option);
 	}
 
@@ -77,7 +77,7 @@ public class ConsumptionsGUI : MonoBehaviour
 			filterRange.minSlider.value = normalizedMax;
 
 		// Update min value label
-		float minValue = (normalizedMin * (selectedConsumption.maxVal - selectedConsumption.minVal) + selectedConsumption.minVal);
+		float minValue = (normalizedMin * (selectedBuildingInfo.maxVal - selectedBuildingInfo.minVal) + selectedBuildingInfo.minVal);
 		filterRange.minValue.text = minValue.ToString("0.##");
 
 		// Update min property in RangeGradient shader
@@ -97,7 +97,7 @@ public class ConsumptionsGUI : MonoBehaviour
 			filterRange.maxSlider.value = normalizedMin;
 
 		// Update max value label
-		float maxValue = (normalizedMax * (selectedConsumption.maxVal - selectedConsumption.minVal) + selectedConsumption.minVal);
+		float maxValue = (normalizedMax * (selectedBuildingInfo.maxVal - selectedBuildingInfo.minVal) + selectedBuildingInfo.minVal);
 		filterRange.maxValue.text = maxValue.ToString("0.##");
 
 		// Update max property in RangeGradient shader
@@ -118,33 +118,33 @@ public class ConsumptionsGUI : MonoBehaviour
 
 	private void InitDropdown()
 	{
-		consumptionDropdown.ClearOptions();
+		infoDropdown.ClearOptions();
 
-		List<string> consumptionNames = new List<string>();
-		foreach (var item in neighbourhood.Consumptions)
+		List<string> infoNames = new List<string>();
+		foreach (var item in neighbourhood.BuildingInfos)
 		{
-			consumptionNames.Add($"{item.name} ({item.units})");
+			infoNames.Add($"{item.name} ({item.units})");
 		}
 
-		consumptionDropdown.AddOptions(consumptionNames);
+		infoDropdown.AddOptions(infoNames);
 		OnOptionChanged(0);
 	}
 
 	private void UpdateFilterScale(int option)
 	{
-		selectedConsumption = neighbourhood.Consumptions[option];
+		selectedBuildingInfo = neighbourhood.BuildingInfos[option];
 
 		// Reset slider values
 		filterRange.minSlider.value = 0.0f;
 		filterRange.maxSlider.value = 1.0f;
 
 		// Update min max value labels
-		filterRange.minValue.text = selectedConsumption.minVal.ToString("0.##");
-		filterRange.maxValue.text = selectedConsumption.maxVal.ToString("0.##");
+		filterRange.minValue.text = selectedBuildingInfo.minVal.ToString("0.##");
+		filterRange.maxValue.text = selectedBuildingInfo.maxVal.ToString("0.##");
 
 		// Update range gradient colour and min, max values
 		var defaultColor = neighbourhood.DefaultColor;
-		var tint = selectedConsumption.color;
+		var tint = selectedBuildingInfo.color;
 		filterRange.range.material.SetColor("_Color1", Color.Lerp(defaultColor, tint, filterRange.minSlider.value));
 		filterRange.range.material.SetColor("_Color2", Color.Lerp(defaultColor, tint, filterRange.maxSlider.value));
 		filterRange.range.material.SetFloat("_Min", filterRange.minSlider.value);

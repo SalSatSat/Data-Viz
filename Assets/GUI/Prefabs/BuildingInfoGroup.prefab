@@ -203,8 +203,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Consumptions
+  m_text: Building Info
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1279,8 +1279,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -1333,7 +1333,7 @@ GameObject:
   - component: {fileID: 3497752713320232988}
   - component: {fileID: 2536110391020343749}
   m_Layer: 5
-  m_Name: ConsumptionSelection
+  m_Name: BuildingInfoSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1415,7 +1415,7 @@ GameObject:
   - component: {fileID: 8624093348728181611}
   - component: {fileID: 6091335359125954528}
   m_Layer: 5
-  m_Name: ConsumptionsGroup
+  m_Name: BuildingInfoGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1518,7 +1518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d23c8df52bb36f4294d764ae29c8cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consumptionDropdown: {fileID: 7961315687431923144}
+  infoDropdown: {fileID: 7961315687431923144}
   filterRange: {fileID: 8836441973323361642}
   neighbourhood: {fileID: 0}
 --- !u!114 &6091335359125954528

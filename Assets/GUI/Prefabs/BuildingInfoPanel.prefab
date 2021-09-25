@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4452792016224579750}
   - component: {fileID: 7036167949398810971}
   m_Layer: 5
-  m_Name: BuildingConsumptionPanel
+  m_Name: BuildingInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,7 +129,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 16, y: -40}
-  m_SizeDelta: {x: 118, y: 44}
+  m_SizeDelta: {x: 84, y: 44}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6273565566208890303
 CanvasRenderer:
@@ -397,7 +397,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -16, y: 16}
-  m_SizeDelta: {x: 50, y: 44}
+  m_SizeDelta: {x: 84, y: 44}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &2962709542496942297
 CanvasRenderer:
