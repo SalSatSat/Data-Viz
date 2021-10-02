@@ -2,6 +2,11 @@
 
 Data-Viz is a project to explore various data visualization techniques in Unity
 
+### Screenshots
+
+<a  href="Screenshots/BuildingInfo.jpg">
+<img src="Screenshots/BuildingInfo.jpg" height="200" alt="" border="1"/></a>
+
 ### Requisites
 
 - [Unity](www.unity3d.com) 2020.3.12f1
