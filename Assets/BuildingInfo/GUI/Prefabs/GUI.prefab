@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1577408906402771117
 RectTransform:
   m_ObjectHideFlags: 0
@@ -180,7 +180,23 @@ MonoBehaviour:
   m_text: '<size=24><b>About</b></size>
 
 
-    ...To be filled...
+    Explore the buildings in this Singaporean
+    neighbourhood.
+
+
+    Select which building information to display using the dropdown
+    on the top left of the screen.
+
+    Filter active buildings using the two-way
+    slider.
+
+
+    Hover over each building to see its information.
+
+
+    Use the
+    map control buttons on the top right of the screen to zoom in/out, select map
+    background and reset camera''s orientation.
 
 
     <size=24><b>Controls</b></size>
@@ -508,7 +524,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 342, y: 380}
+  m_SizeDelta: {x: 450, y: 650}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3283858829746284632
 CanvasRenderer:
@@ -1506,11 +1522,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7961315687929496571, guid: 43e4ab02f7185ac449acfa1eb4c4db97, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7961315687929496571, guid: 43e4ab02f7185ac449acfa1eb4c4db97, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7961315687929496571, guid: 43e4ab02f7185ac449acfa1eb4c4db97, type: 3}
       propertyPath: m_SizeDelta.x
