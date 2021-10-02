@@ -25,6 +25,9 @@
 # Visual Studio cache directory
 .vs/
 
+# Visual Studio config
+.vsconfig
+
 # Gradle cache directory
 .gradle/
 
@@ -63,3 +66,4 @@ crashlytics-build.properties
 
 # Additional folders/files
 [Aa]ssets/Test*
+[Aa]ssets/Resources/Mapbox*
