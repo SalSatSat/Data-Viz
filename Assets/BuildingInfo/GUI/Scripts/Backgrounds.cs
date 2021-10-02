@@ -88,13 +88,13 @@ public class Backgrounds : MonoBehaviour
             return;
 		}
 
-		foreach (var type in backgroundTypes)
-		{
+        foreach (var type in backgroundTypes)
+        {
             string option = type.Contains("Mapbox") ? type.Replace("Mapbox", "") : type;
             options.Add(option);
 		}
 
         backgroundDropdown.AddOptions(options);
-        OnOptionChanged(options.FindIndex(option => DefaultMapOption.Contains(option)));
+        backgroundDropdown.value = options.FindIndex(option => DefaultMapOption.Contains(option));
     }
 }
