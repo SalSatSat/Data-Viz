@@ -9,7 +9,7 @@ Data-Viz is a project to explore various data visualization techniques in Unity
 
 ### Documentation
 
-The user guide can be found [here](./Docs/UserGuide)
+The user guide can be found [here](./Docs/UserGuide.md)
 
 ### Run
 
