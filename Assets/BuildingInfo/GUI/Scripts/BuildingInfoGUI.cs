@@ -37,7 +37,6 @@ public class BuildingInfoGUI : MonoBehaviour
 	private void Start()
 	{
 		InitDropdown();
-		UpdateFilterScale(0);
 
 		// Initialize color in range shader
 		filterRange.range.material.SetColor("_Color3", neighbourhood.OutOfRangeColor);
