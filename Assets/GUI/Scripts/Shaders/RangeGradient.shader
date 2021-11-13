@@ -8,14 +8,6 @@
 
 Shader "Custom/RangeGradient"
 {
-	Properties
-	{
-		[HideInInspector] _Color1 ("Left Color", Color) = (0, 0, 0, 0)
-		[HideInInspector] _Color2 ("Right Color", Color) = (1, 1, 1, 1)
-		[HideInInspector] _Color3 ("Out of Range Color", Color) = (0.5, 0.5, 0.5, 0.5)
-		[HideInInspector] _Min ("Min Value", Float) = 0
-		[HideInInspector] _Max ("Max Value", Float) = 1
-	}
 	SubShader
 	{
 		Tags
@@ -54,26 +46,26 @@ Shader "Custom/RangeGradient"
 				float4 color : COLOR;
 			};
 
-			fixed4 _Color1;
-			fixed4 _Color2;
-			fixed4 _Color3;
-			float _Min;
-			float _Max;
+			fixed4 MinColor;
+			fixed4 MaxColor;
+			fixed4 OutOfRangeColor;
+			float MinFilter;
+			float MaxFilter;
 
 			v2f vert(appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
-				o.color = lerp(_Color1, _Color2, v.uv.x);
+				o.color = lerp(MinColor, MaxColor, v.uv.x);
 				return o;
 			}
 
 			fixed4 frag(v2f i) : COLOR
 			{
-				if ((_Min > 0 && i.uv.x >= 0 && i.uv.x <= _Min) ||
-					(_Max < 1 && i.uv.x >= _Max && i.uv.x <= 1))
-					i.color = _Color3;
+				if ((MinFilter > 0 && i.uv.x >= 0 && i.uv.x <= MinFilter) ||
+					(MaxFilter < 1 && i.uv.x >= MaxFilter && i.uv.x <= 1))
+					i.color = OutOfRangeColor;
 				return i.color;
 			}
 			ENDCG
