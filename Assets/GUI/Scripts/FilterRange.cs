@@ -41,10 +41,6 @@ public class FilterRange : MonoBehaviour
 		Debug.Assert(maxValue != null, "FilterScale: Missing maxValue");
 	}
 
-	private void Start()
-	{
-	}
-
 	//
 	// Event Methods
 	//
@@ -55,14 +51,29 @@ public class FilterRange : MonoBehaviour
 	// Public Methods
 	//
 
-	public void SetRangeMaterialColor(string name, Color value)
+	public void SetMinColor(Color value)
 	{
-		range.material.SetColor(name, value);
+		range.material.SetColor("MinColor", value);
 	}
 
-	public void SetRangeMaterialFloat(string name, float value)
+	public void SetMaxColor(Color value)
 	{
-		range.material.SetFloat(name, value);
+		range.material.SetColor("MaxColor", value);
+	}
+
+	public void SetOutOfRangeColor(Color value)
+	{
+		range.material.SetColor("OutOfRangeColor", value);
+	}
+
+	public void SetMinFilter(float min)
+	{
+		range.material.SetFloat("MinFilter", min);
+	}
+
+	public void SetMaxFilter(float max)
+	{
+		range.material.SetFloat("MaxFilter", max);
 	}
 
 	//

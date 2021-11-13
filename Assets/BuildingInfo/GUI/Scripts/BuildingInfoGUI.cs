@@ -39,7 +39,7 @@ public class BuildingInfoGUI : MonoBehaviour
 		InitDropdown();
 
 		// Initialize color in range shader
-		filterRange.SetRangeMaterialColor("_Color3", neighbourhood.OutOfRangeColor);
+		filterRange.SetOutOfRangeColor(neighbourhood.OutOfRangeColor);
 
 		// Initilaize listeners
 		infoDropdown.onValueChanged.AddListener(OnOptionChanged);
@@ -80,7 +80,7 @@ public class BuildingInfoGUI : MonoBehaviour
 		filterRange.MinValue.text = minValue.ToString("0.##");
 
 		// Update min property in RangeGradient shader
-		filterRange.SetRangeMaterialFloat("_Min", normalizedMin);
+		filterRange.SetMinFilter(normalizedMin);
 
 		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
 		neighbourhood.UpdateBuildingActives(normalizedMin, normalizedMax);
@@ -99,7 +99,7 @@ public class BuildingInfoGUI : MonoBehaviour
 		filterRange.MaxValue.text = maxValue.ToString("0.##");
 
 		// Update max property in RangeGradient shader
-		filterRange.SetRangeMaterialFloat("_Max", normalizedMax);
+		filterRange.SetMaxFilter(normalizedMax);
 
 		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
 		neighbourhood.UpdateBuildingActives(normalizedMin, normalizedMax);
@@ -142,9 +142,9 @@ public class BuildingInfoGUI : MonoBehaviour
 		// Update range gradient colour and min, max values
 		var defaultColor = neighbourhood.DefaultColor;
 		var tint = selectedBuildingInfo.color;
-		filterRange.SetRangeMaterialColor("_Color1", Color.Lerp(defaultColor, tint, filterRange.MinSlider.value));
-		filterRange.SetRangeMaterialColor("_Color2", Color.Lerp(defaultColor, tint, filterRange.MaxSlider.value));
-		filterRange.SetRangeMaterialFloat("_Min", filterRange.MinSlider.value);
-		filterRange.SetRangeMaterialFloat("_Max", filterRange.MaxSlider.value);
+		filterRange.SetMinColor(defaultColor);
+		filterRange.SetMaxColor(tint);
+		filterRange.SetMinFilter(filterRange.MinSlider.value);
+		filterRange.SetMaxFilter(filterRange.MaxSlider.value);
 	}
 }
