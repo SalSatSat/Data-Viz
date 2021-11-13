@@ -13,11 +13,17 @@ using TMPro;
 public class FilterRange : MonoBehaviour
 {
 	[Header("UI References")]
-	public Image range;
-	public Slider minSlider;
-	public Slider maxSlider;
-	public TMP_Text minValue;
-	public TMP_Text maxValue;
+	[SerializeField] private Image range = default;
+	[SerializeField] private Slider minSlider = default;
+	[SerializeField] private Slider maxSlider = default;
+	[SerializeField] private TMP_Text minValue = default;
+	[SerializeField] private TMP_Text maxValue = default;
+
+	public Image Range { get { return range; } }
+	public Slider MinSlider { get { return minSlider; } }
+	public Slider MaxSlider { get { return maxSlider; } }
+	public TMP_Text MinValue { get { return minValue; } }
+	public TMP_Text MaxValue { get { return maxValue; } }
 
 	//[Header("Prefabs")]
 
@@ -49,7 +55,15 @@ public class FilterRange : MonoBehaviour
 	// Public Methods
 	//
 
+	public void SetRangeMaterialColor(string name, Color value)
+	{
+		range.material.SetColor(name, value);
+	}
 
+	public void SetRangeMaterialFloat(string name, float value)
+	{
+		range.material.SetFloat(name, value);
+	}
 
 	//
 	// Private Methods

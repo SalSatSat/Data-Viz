@@ -39,20 +39,20 @@ public class BuildingInfoGUI : MonoBehaviour
 		InitDropdown();
 
 		// Initialize color in range shader
-		filterRange.range.material.SetColor("_Color3", neighbourhood.OutOfRangeColor);
+		filterRange.SetRangeMaterialColor("_Color3", neighbourhood.OutOfRangeColor);
 
 		// Initilaize listeners
 		infoDropdown.onValueChanged.AddListener(OnOptionChanged);
-		filterRange.minSlider.onValueChanged.AddListener(OnMinValueChanged);
-		filterRange.maxSlider.onValueChanged.AddListener(OnMaxValueChanged);
+		filterRange.MinSlider.onValueChanged.AddListener(OnMinValueChanged);
+		filterRange.MaxSlider.onValueChanged.AddListener(OnMaxValueChanged);
 	}
 
 	private void OnApplicationQuit()
 	{
 		// Initilaize listeners
 		infoDropdown.onValueChanged.RemoveListener(OnOptionChanged);
-		filterRange.minSlider.onValueChanged.RemoveListener(OnMinValueChanged);
-		filterRange.maxSlider.onValueChanged.RemoveListener(OnMaxValueChanged);
+		filterRange.MinSlider.onValueChanged.RemoveListener(OnMinValueChanged);
+		filterRange.MaxSlider.onValueChanged.RemoveListener(OnMaxValueChanged);
 
 		UpdateFilterScale(0);
 	}
@@ -69,19 +69,18 @@ public class BuildingInfoGUI : MonoBehaviour
 
 	private void OnMinValueChanged(float normalizedMin)
 	{
-		float normalizedMax = filterRange.maxSlider.value;
+		float normalizedMax = filterRange.MaxSlider.value;
 
 		// Ensure min slider does not go past max slider
 		if (normalizedMin > normalizedMax)
-			filterRange.minSlider.value = normalizedMax;
+			filterRange.MinSlider.value = normalizedMax;
 
 		// Update min value label
 		float minValue = (normalizedMin * (selectedBuildingInfo.maxVal - selectedBuildingInfo.minVal) + selectedBuildingInfo.minVal);
-		filterRange.minValue.text = minValue.ToString("0.##");
+		filterRange.MinValue.text = minValue.ToString("0.##");
 
 		// Update min property in RangeGradient shader
-		if (filterRange.range.material != null)
-			filterRange.range.material.SetFloat("_Min", normalizedMin);
+		filterRange.SetRangeMaterialFloat("_Min", normalizedMin);
 
 		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
 		neighbourhood.UpdateBuildingActives(normalizedMin, normalizedMax);
@@ -89,19 +88,18 @@ public class BuildingInfoGUI : MonoBehaviour
 
 	private void OnMaxValueChanged(float normalizedMax)
 	{
-		float normalizedMin = filterRange.minSlider.value;
+		float normalizedMin = filterRange.MinSlider.value;
 
 		// Ensure max slider does not go past min slider
 		if (normalizedMax < normalizedMin)
-			filterRange.maxSlider.value = normalizedMin;
+			filterRange.MaxSlider.value = normalizedMin;
 
 		// Update max value label
 		float maxValue = (normalizedMax * (selectedBuildingInfo.maxVal - selectedBuildingInfo.minVal) + selectedBuildingInfo.minVal);
-		filterRange.maxValue.text = maxValue.ToString("0.##");
+		filterRange.MaxValue.text = maxValue.ToString("0.##");
 
 		// Update max property in RangeGradient shader
-		if (filterRange.range.material != null)
-			filterRange.range.material.SetFloat("_Max", normalizedMax);
+		filterRange.SetRangeMaterialFloat("_Max", normalizedMax);
 
 		neighbourhood.UpdateSelectedNeighbourhoodColors(normalizedMin, normalizedMax);
 		neighbourhood.UpdateBuildingActives(normalizedMin, normalizedMax);
@@ -134,19 +132,19 @@ public class BuildingInfoGUI : MonoBehaviour
 		selectedBuildingInfo = neighbourhood.BuildingInfos[option];
 
 		// Reset slider values
-		filterRange.minSlider.value = 0.0f;
-		filterRange.maxSlider.value = 1.0f;
+		filterRange.MinSlider.value = 0.0f;
+		filterRange.MaxSlider.value = 1.0f;
 
 		// Update min max value labels
-		filterRange.minValue.text = selectedBuildingInfo.minVal.ToString("0.##");
-		filterRange.maxValue.text = selectedBuildingInfo.maxVal.ToString("0.##");
+		filterRange.MinValue.text = selectedBuildingInfo.minVal.ToString("0.##");
+		filterRange.MaxValue.text = selectedBuildingInfo.maxVal.ToString("0.##");
 
 		// Update range gradient colour and min, max values
 		var defaultColor = neighbourhood.DefaultColor;
 		var tint = selectedBuildingInfo.color;
-		filterRange.range.material.SetColor("_Color1", Color.Lerp(defaultColor, tint, filterRange.minSlider.value));
-		filterRange.range.material.SetColor("_Color2", Color.Lerp(defaultColor, tint, filterRange.maxSlider.value));
-		filterRange.range.material.SetFloat("_Min", filterRange.minSlider.value);
-		filterRange.range.material.SetFloat("_Max", filterRange.maxSlider.value);
+		filterRange.SetRangeMaterialColor("_Color1", Color.Lerp(defaultColor, tint, filterRange.MinSlider.value));
+		filterRange.SetRangeMaterialColor("_Color2", Color.Lerp(defaultColor, tint, filterRange.MaxSlider.value));
+		filterRange.SetRangeMaterialFloat("_Min", filterRange.MinSlider.value);
+		filterRange.SetRangeMaterialFloat("_Max", filterRange.MaxSlider.value);
 	}
 }
