@@ -13,11 +13,17 @@ using TMPro;
 public class FilterRange : MonoBehaviour
 {
 	[Header("UI References")]
-	public Image range;
-	public Slider minSlider;
-	public Slider maxSlider;
-	public TMP_Text minValue;
-	public TMP_Text maxValue;
+	[SerializeField] private Image range = default;
+	[SerializeField] private Slider minSlider = default;
+	[SerializeField] private Slider maxSlider = default;
+	[SerializeField] private TMP_Text minValue = default;
+	[SerializeField] private TMP_Text maxValue = default;
+
+	public Image Range { get { return range; } }
+	public Slider MinSlider { get { return minSlider; } }
+	public Slider MaxSlider { get { return maxSlider; } }
+	public TMP_Text MinValue { get { return minValue; } }
+	public TMP_Text MaxValue { get { return maxValue; } }
 
 	//[Header("Prefabs")]
 
@@ -35,10 +41,6 @@ public class FilterRange : MonoBehaviour
 		Debug.Assert(maxValue != null, "FilterScale: Missing maxValue");
 	}
 
-	private void Start()
-	{
-	}
-
 	//
 	// Event Methods
 	//
@@ -49,7 +51,30 @@ public class FilterRange : MonoBehaviour
 	// Public Methods
 	//
 
+	public void SetMinColor(Color value)
+	{
+		range.material.SetColor("MinColor", value);
+	}
 
+	public void SetMaxColor(Color value)
+	{
+		range.material.SetColor("MaxColor", value);
+	}
+
+	public void SetOutOfRangeColor(Color value)
+	{
+		range.material.SetColor("OutOfRangeColor", value);
+	}
+
+	public void SetMinFilter(float min)
+	{
+		range.material.SetFloat("MinFilter", min);
+	}
+
+	public void SetMaxFilter(float max)
+	{
+		range.material.SetFloat("MaxFilter", max);
+	}
 
 	//
 	// Private Methods
