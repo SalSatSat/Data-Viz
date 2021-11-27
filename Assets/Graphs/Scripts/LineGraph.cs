@@ -6,10 +6,10 @@
 //
 // Author:  Muhammad Salihin Bin Zaol-kefli  (salsatsat@gmail.com)
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class LineGraph : MonoBehaviour
 {
@@ -21,6 +21,7 @@ public class LineGraph : MonoBehaviour
     [SerializeField] private RectTransform labelYContainer = default;
     [SerializeField] private RectTransform dashXContainer = default;
     [SerializeField] private RectTransform dashYContainer = default;
+    [SerializeField] private TMP_InputField title = default;
 
     [Header("Prefabs")]
     [SerializeField] private Image dotPrefab = default;
@@ -49,12 +50,6 @@ public class LineGraph : MonoBehaviour
         Debug.Assert(dashYPrefab != null, "LineGraph: Missing dashTemplateY");
     }
 
-	private void Start()
-    {
-        List<float> valueList = new List<float>() { 5, 98, 56, 45, 30, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 50, 30, 60, 50, 40, 20, 5, 20, 10, 50, 30, 20, 11 };
-        CreateGraph(valueList, Color.red);
-    }
-
     //
     // Event Methods
     //
@@ -65,7 +60,7 @@ public class LineGraph : MonoBehaviour
     // Public Methods
     //
 
-    public void CreateGraph(List<float> valueList, Color color)
+    public void CreateGraph(List<float> valueList, Color color, List<string> labelsList = null)
     {
         ClearGameObjectList();
 
@@ -120,7 +115,7 @@ public class LineGraph : MonoBehaviour
             lastCircleGameObject = dot;
 
             // LabelX
-            var labelX = CreateLabel(labelXPrefab, labelXContainer, $"LabelX{i}", new Vector2(xPosition, -7f), GetAxisLabelX(i));
+            var labelX = CreateLabel(labelXPrefab, labelXContainer, $"LabelX{i}", new Vector2(xPosition, -7f), GetAxisLabelX(i, labelsList));
             gameObjectList.Add(labelX);
 
             // DashX
@@ -142,6 +137,11 @@ public class LineGraph : MonoBehaviour
             gameObjectList.Add(dashY);
         }
     }
+
+    public void SetTitle(string titleText)
+	{
+        title.text = titleText;
+	}
 
     //
     // Private Methods
