@@ -66,7 +66,7 @@ public class Neighbourhood : MonoBehaviour
 	public readonly Color DefaultColor = Color.white;
 	public readonly Color OutOfRangeColor = Color.grey;
 	private const float InvMaxColorVal = 1.0f / 255.0f;
-	private readonly string filename = $"Data{Path.DirectorySeparatorChar}BuildingInfo.csv";
+	private readonly string filename = $"Data{Path.DirectorySeparatorChar}CovidCasesInYear.csv";
 
 	//
 	// Unity Methods
