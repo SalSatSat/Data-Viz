@@ -36,6 +36,8 @@ public class BuildingInfoGUI : MonoBehaviour
 		Debug.Assert(infoDropdown != null, "BuildingInfo: Missing infoDropdown");
 		Debug.Assert(filterRange != null, "BuildingInfo: Missing filterRange");
 		Debug.Assert(neighbourhood != null, "BuildingInfo: Missing neighbourhood");
+		Debug.Assert(barGraph != null, "BuildingInfo: Missing barGraph");
+		Debug.Assert(lineGraph != null, "BuildingInfo: Missing lineGraph");
 	}
 
 	private void Start()
