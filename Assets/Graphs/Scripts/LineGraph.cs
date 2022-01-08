@@ -9,33 +9,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class LineGraph : MonoBehaviour
+public class LineGraph : Graph
 {
-    [SerializeField] private Sprite circleSprite;
-
-	[Header("UI References")]
-    [SerializeField] private RectTransform graphContainer = default;
-    [SerializeField] private RectTransform labelXContainer = default;
-    [SerializeField] private RectTransform labelYContainer = default;
-    [SerializeField] private RectTransform dashXContainer = default;
-    [SerializeField] private RectTransform dashYContainer = default;
-    [SerializeField] private TMP_InputField title = default;
-
-    [Header("Prefabs")]
-    [SerializeField] private Image dotPrefab = default;
-    [SerializeField] private Image dotConnectionPrefab = default;
-    [SerializeField] private RectTransform labelXPrefab = default;
-    [SerializeField] private RectTransform labelYPrefab = default;
-    [SerializeField] private RectTransform dashXPrefab = default;
-    [SerializeField] private RectTransform dashYPrefab = default;
-
-    private readonly List<GameObject> gameObjectList = new List<GameObject>();
-
-    private const float DefaultYDifference = 5.0f;
-    private const float YDifferenceOffset = 0.2f;
-    private const int SeparatorCount = 10;
+	[SerializeField] private Image dotPrefab = default;
+	[SerializeField] private Image dotConnectionPrefab = default;
 
 	//
 	// Unity Methods
@@ -43,11 +21,9 @@ public class LineGraph : MonoBehaviour
 
 	private void Awake()
 	{
-        Debug.Assert(graphContainer != null, "LineGraph: Missing graphContainer");
-        Debug.Assert(labelXPrefab != null, "LineGraph: Missing labelTemplateX");
-        Debug.Assert(labelYPrefab != null, "LineGraph: Missing labelTemplateY");
-        Debug.Assert(dashXPrefab != null, "LineGraph: Missing dashTemplateX");
-        Debug.Assert(dashYPrefab != null, "LineGraph: Missing dashTemplateY");
+        CheckMissingReferences();
+        Debug.Assert(dotPrefab != null, "LineGraph: Missing dotPrefab");
+        Debug.Assert(dotConnectionPrefab != null, "LineGraph: Missing dotConnectionPrefab");
     }
 
     //
@@ -60,7 +36,7 @@ public class LineGraph : MonoBehaviour
     // Public Methods
     //
 
-    public void CreateGraph(List<float> valueList, Color color, List<string> labelsList = null)
+    public override void CreateGraph(List<float> valueList, Color color, List<string> labelsList = null)
     {
         ClearGameObjectList();
 
@@ -138,22 +114,9 @@ public class LineGraph : MonoBehaviour
         }
     }
 
-    public void SetTitle(string titleText)
-	{
-        title.text = titleText;
-	}
-
     //
     // Private Methods
     //
-
-    private void ClearGameObjectList()
-    {
-        foreach (GameObject gameObject in gameObjectList)
-            Destroy(gameObject);
-
-        gameObjectList.Clear();
-    }
 
     private float GetAngleFromVectorFloat(Vector3 dir)
     {
@@ -193,27 +156,4 @@ public class LineGraph : MonoBehaviour
         
         return dotConnection.gameObject;
     }
-
-    private GameObject CreateLabel(RectTransform labelPrefab, RectTransform container, string name, Vector2 anchorPosition, string labelText)
-	{
-        RectTransform label = Instantiate(labelPrefab, container);
-        label.name = name;
-        label.anchoredPosition = anchorPosition;
-        label.GetComponent<Text>().text = labelText;
-
-        return label.gameObject;
-    }
-
-    private GameObject CreateDash(RectTransform dashPrefab, RectTransform container, string name, Vector2 anchorPosition)
-	{
-        RectTransform dash = Instantiate(dashPrefab, container);
-        dash.gameObject.name = name;
-        dash.anchoredPosition = anchorPosition;
-
-        return dash.gameObject;
-    }
-
-    private string GetAxisLabelX(int index, List<string> labelsList = null) => (labelsList == null) ? $"{index + 1}" : labelsList[index];
-
-    private string GetAxisLabelY(float f) => $"{Mathf.RoundToInt(f)}";
 }
