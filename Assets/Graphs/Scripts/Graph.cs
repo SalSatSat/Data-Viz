@@ -40,8 +40,6 @@ public abstract class Graph : MonoBehaviour
 
     protected void CheckMissingReferences()
     {
-        Debug.Log("Graph");
-
         Debug.Assert(graphContainer != null, "Graph: Missing graphContainer");
         Debug.Assert(labelXContainer != null, "Graph: Missing labelXContainer");
         Debug.Assert(labelYContainer != null, "Graph: Missing labelYContainer");
