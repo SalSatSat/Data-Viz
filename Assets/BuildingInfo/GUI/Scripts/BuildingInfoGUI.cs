@@ -9,6 +9,8 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class BuildingInfoGUI : MonoBehaviour
 {
@@ -18,6 +20,8 @@ public class BuildingInfoGUI : MonoBehaviour
 
 	[Header("Reference")]
 	[SerializeField] private Neighbourhood neighbourhood = default;
+	[SerializeField] private BarGraph barGraph = default;
+	[SerializeField] private LineGraph lineGraph = default;
 
 	private BuildingInfo selectedBuildingInfo = null;
 
@@ -45,6 +49,32 @@ public class BuildingInfoGUI : MonoBehaviour
 		infoDropdown.onValueChanged.AddListener(OnOptionChanged);
 		filterRange.MinSlider.onValueChanged.AddListener(OnMinValueChanged);
 		filterRange.MaxSlider.onValueChanged.AddListener(OnMaxValueChanged);
+
+		// Initialize line graph
+		Func<List<float>> GetTotalValues = () =>
+		{
+			List<float> totalValues = new List<float>();
+			foreach (var buildingInfo in neighbourhood.BuildingInfos)
+			{
+				totalValues.Add(buildingInfo.values.Sum());
+			}
+
+			return totalValues;
+		};
+
+		Func<List<string>> GetLabelsList = () =>
+		{
+			List<string> labels = new List<string>();
+			foreach (var buildingInfo in neighbourhood.BuildingInfos)
+			{
+				labels.Add(buildingInfo.name.ToUpper().Substring(0, 3));
+			}
+
+			return labels;
+		};
+
+		lineGraph.CreateGraph(GetTotalValues(), selectedBuildingInfo.color, GetLabelsList());
+		lineGraph.SetTitle("Total Number of Covid Cases in 2021");
 	}
 
 	private void OnApplicationQuit()
@@ -55,6 +85,7 @@ public class BuildingInfoGUI : MonoBehaviour
 		filterRange.MaxSlider.onValueChanged.RemoveListener(OnMaxValueChanged);
 
 		UpdateFilterScale(0);
+		UpdateBarGraph(0);
 	}
 
 	//
@@ -65,6 +96,7 @@ public class BuildingInfoGUI : MonoBehaviour
 	{
 		neighbourhood.UpdateNeighbourhoodInfos(option);
 		UpdateFilterScale(option);
+		UpdateBarGraph(option);
 	}
 
 	private void OnMinValueChanged(float normalizedMin)
@@ -146,5 +178,21 @@ public class BuildingInfoGUI : MonoBehaviour
 		filterRange.SetMaxColor(tint);
 		filterRange.SetMinFilter(filterRange.MinSlider.value);
 		filterRange.SetMaxFilter(filterRange.MaxSlider.value);
+	}
+
+	private void UpdateBarGraph(int option)
+	{
+		selectedBuildingInfo = neighbourhood.BuildingInfos[option];
+
+		var distribution = selectedBuildingInfo.ComputeDistribution();
+		var valuesList = distribution.Values.ToList().ConvertAll(new Converter<int, float>(delegate(int value) {
+			return value;
+		}));
+		var labelsList = distribution.Keys.ToList().ConvertAll(new Converter<float, string>(delegate(float value) {
+			return value.ToString();
+		}));
+
+		barGraph.CreateGraph(valuesList, selectedBuildingInfo.color, labelsList);
+		barGraph.SetTitle($"Distribution of Values Across Buildings in {selectedBuildingInfo.name}");
 	}
 }

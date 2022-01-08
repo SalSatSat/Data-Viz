@@ -1332,6 +1332,7 @@ GameObject:
   - component: {fileID: 7961315687929496571}
   - component: {fileID: 3497752713320232988}
   - component: {fileID: 2536110391020343749}
+  - component: {fileID: 4526962235461473281}
   m_Layer: 5
   m_Name: BuildingInfoSelection
   m_TagString: Untagged
@@ -1355,8 +1356,8 @@ RectTransform:
   m_Father: {fileID: 1080520277625283775}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
@@ -1400,6 +1401,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 1
+--- !u!114 &4526962235461473281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961315687929496570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 500
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &8933401102814070609
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1435,7 @@ GameObject:
   - component: {fileID: 8062114967771221768}
   - component: {fileID: 8624093348728181611}
   - component: {fileID: 6091335359125954528}
+  - component: {fileID: 1558043811756435837}
   m_Layer: 5
   m_Name: BuildingInfoGroup
   m_TagString: Untagged
@@ -1521,6 +1543,7 @@ MonoBehaviour:
   infoDropdown: {fileID: 7961315687431923144}
   filterRange: {fileID: 8836441973323361642}
   neighbourhood: {fileID: 0}
+  barGraph: {fileID: 0}
 --- !u!114 &6091335359125954528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1535,6 +1558,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 1
+--- !u!114 &1558043811756435837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8933401102814070609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 500
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1001 &6193923771314210290
 PrefabInstance:
   m_ObjectHideFlags: 0
