@@ -599,11 +599,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7782214249163870077}
-  - component: {fileID: 8870724900992276580}
-  - component: {fileID: 5872477789474552076}
-  - component: {fileID: 7782214249163870076}
+  - component: {fileID: 2639842100236242786}
+  - component: {fileID: 1121416114603454169}
+  - component: {fileID: 7460390025967892140}
   m_Layer: 5
-  m_Name: LineGraph
+  m_Name: BarGraph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -630,7 +630,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8870724900992276580
+--- !u!222 &2639842100236242786
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -638,7 +638,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7782214249163870078}
   m_CullTransparentMesh: 0
---- !u!114 &5872477789474552076
+--- !u!114 &1121416114603454169
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -668,7 +668,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7782214249163870076
+--- !u!114 &7460390025967892140
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -677,7 +677,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7782214249163870078}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0fc54148d1178c43881c278d4366f10, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e646221367a1c44b997a1177dfd730b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   graphContainer: {fileID: 7782214249439704277}
@@ -690,8 +690,7 @@ MonoBehaviour:
   labelYPrefab: {fileID: 8758664233630755393, guid: b42cd84d2389a6241a7aa3cd93c06eca, type: 3}
   dashXPrefab: {fileID: 8895602839203925719, guid: 7ba3f9a942c51234e95e98e859637232, type: 3}
   dashYPrefab: {fileID: 4024951525112104809, guid: 3ddb4ffde283a9b46ad2c281cd57d510, type: 3}
-  dotPrefab: {fileID: 7999549383800088445, guid: 137f0d873d49b7f4f8f3f893fbe94d97, type: 3}
-  dotConnectionPrefab: {fileID: 8153225855588058369, guid: f71e8ba7723f91c48961c93868f5724e, type: 3}
+  barPrefab: {fileID: 7999549383800088445, guid: 85c6f97066f85d84286ef7face88f855, type: 3}
 --- !u!1 &7782214249264865922
 GameObject:
   m_ObjectHideFlags: 0

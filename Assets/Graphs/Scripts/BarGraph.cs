@@ -10,20 +10,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LineGraph : Graph
+public class BarGraph : Graph
 {
-	[SerializeField] private Image dotPrefab = default;
-	[SerializeField] private Image dotConnectionPrefab = default;
+    [SerializeField] private Image barPrefab = default;
 
-	//
-	// Unity Methods
-	//
+    private const float BarWidthScale = 0.9f;
 
-	private void Awake()
-	{
+    //
+    // Unity Methods
+    //
+
+    private void Awake()
+    {
         CheckMissingReferences();
-        Debug.Assert(dotPrefab != null, "LineGraph: Missing dotPrefab");
-        Debug.Assert(dotConnectionPrefab != null, "LineGraph: Missing dotConnectionPrefab");
+        Debug.Assert(barPrefab != null, "LineGraph: Missing barPrefab");
     }
 
     //
@@ -66,9 +66,6 @@ public class LineGraph : Graph
         yMinimum = 0f;  // Start the graph at zero
 
         float xSize = graphWidth / (valueCount + 1);
-        GameObject lastCircleGameObject = null;
-        Color dotConnectionColor = color;
-        dotConnectionColor.a = 0.5f;
 
         // Horizontal axis
         for (int i = 0; i < valueCount; ++i)
@@ -76,19 +73,8 @@ public class LineGraph : Graph
             float xPosition = xSize + i * xSize;
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
 
-            GameObject dot = CreateDot($"Dot{i}", new Vector2(xPosition, yPosition), color);
-            gameObjectList.Add(dot);
-
-            // Connect 2 dots
-            if (lastCircleGameObject != null)
-            {
-                var lastCircleRT = lastCircleGameObject.GetComponent<RectTransform>();
-                var dotRT = dot.GetComponent<RectTransform>();
-
-                GameObject dotConnectionGameObject = CreateDotConnection($"DotConnection{i}", lastCircleRT.anchoredPosition, dotRT.anchoredPosition, dotConnectionColor);
-                gameObjectList.Add(dotConnectionGameObject);
-            }
-            lastCircleGameObject = dot;
+            GameObject bar = CreateBar($"Bar{i}", new Vector2(xPosition, yPosition), xSize * BarWidthScale, color);
+            gameObjectList.Add(bar);
 
             // LabelX
             var labelX = CreateLabel(labelXPrefab, labelXContainer, $"LabelX{i}", new Vector2(xPosition, -7f), GetAxisLabelX(i, labelsList));
@@ -118,42 +104,17 @@ public class LineGraph : Graph
     // Private Methods
     //
 
-    private float GetAngleFromVectorFloat(Vector3 dir)
-    {
-        dir.Normalize();
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        
-        if (angle < 0)
-            angle += 360;
+    private GameObject CreateBar(string name, Vector2 graphPosition, float barWidth, Color color)
+	{
+        var bar = Instantiate(barPrefab, graphContainer);
+        bar.name = name;
 
-        return angle;
-    }
+        var barRT = bar.rectTransform;
+        barRT.anchoredPosition = new Vector2(graphPosition.x, 0.0f);
+        barRT.sizeDelta = new Vector2(barWidth, graphPosition.y);
 
-    private GameObject CreateDot(string name, Vector2 anchoredPosition, Color color)
-    {
-		var dot = Instantiate(dotPrefab, graphContainer);
-		dot.name = name;
-        dot.rectTransform.anchoredPosition = anchoredPosition;
-        dot.color = color;
+        bar.color = color;
 
-		return dot.gameObject;
+        return bar.gameObject;
 	}
-
-    private GameObject CreateDotConnection(string name, Vector2 dotPositionA, Vector2 dotPositionB, Color color)
-    {
-        var dotConnection = Instantiate(dotConnectionPrefab, graphContainer);
-        dotConnection.name = name;
-        dotConnection.color = color;
-
-        Vector2 dir = (dotPositionB - dotPositionA).normalized;
-        float distance = Vector2.Distance(dotPositionA, dotPositionB);
-        
-        dotConnection.rectTransform.anchorMin = new Vector2(0.0f, 0.0f);
-        dotConnection.rectTransform.anchorMax = new Vector2(0.0f, 0.0f);
-        dotConnection.rectTransform.sizeDelta = new Vector2(distance, 3.0f);
-        dotConnection.rectTransform.anchoredPosition = dotPositionA + 0.5f * distance * dir;
-        dotConnection.rectTransform.localEulerAngles = new Vector3(0.0f, 0.0f, GetAngleFromVectorFloat(dir));
-        
-        return dotConnection.gameObject;
-    }
 }
