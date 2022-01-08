@@ -20,6 +20,25 @@ public class BuildingInfo
 	public float[] values = null;
 	public float maxVal;
 	public float minVal;
+
+	public Dictionary<float, int> ComputeDistribution()
+	{
+		int length = values.Length;
+		float[] sortedValues = new float[length];
+		Array.Copy(values, sortedValues, length);
+		Array.Sort(sortedValues);
+
+		var distributionValues = new Dictionary<float, int>();
+		foreach (var value in sortedValues)
+		{
+			if (distributionValues.ContainsKey(value))
+				++distributionValues[value];
+			else
+				distributionValues.Add(value, 1);
+		}
+
+		return distributionValues;
+	}
 }
 
 public class Neighbourhood : MonoBehaviour
